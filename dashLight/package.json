@@ -1,0 +1,16 @@
+{
+  "name": "dashlight",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "findButtons": "node node_modules/node-dash-button/bin/findbutton"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "node-dash-button": "^0.6.1"
+  }
+}
