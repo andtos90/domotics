@@ -1,0 +1,2 @@
+# Publish only the sample to avoid credentials leak
+writeMqttCredentials.ino

@@ -1,3 +1,4 @@
+/* Local mosquitto without password */
 const dash_button = require("node-dash-button");
 const { exec } = require("child_process");
 
