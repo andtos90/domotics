@@ -23,7 +23,7 @@ http:
   # Secrets are defined in the file secrets.yaml
   api_password: !secret http_password
   # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
-  base_url: !secret http_password
+  base_url: !secret base_url
 
 # Checks for available updates
 # Note: This component will send some information about your system to
@@ -111,6 +111,11 @@ notify:
   - name: telegram_tostom
     platform: telegram
     chat_id: !secret telegram_tostom_group_chat_id
+   
+media_player:
+  - platform: spotify
+    client_id: !secret spotify_client_id
+    client_secret: !secret spotify_client_secret
 
 group: !include groups.yaml
 automation: !include automations.yaml
