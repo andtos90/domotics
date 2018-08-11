@@ -1,0 +1,10 @@
+media_player.casa:
+  config_entry_id: 3777fcc4013640f2b954bfbe28156f3f
+  name:
+  platform: cast
+  unique_id: 0813aa78-439c-1a19-9978-17562a839375
+remote.xiaomi_miio_192_168_1_134:
+  config_entry_id:
+  name:
+  platform: xiaomi_miio
+  unique_id: chuangmi.ir.v2-34:CE:00:CE:DC:0A

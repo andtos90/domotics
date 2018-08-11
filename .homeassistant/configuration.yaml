@@ -1,0 +1,118 @@
+homeassistant:
+  # Name of the location where Home Assistant is running
+  name: Home
+  # Location required to calculate the time the sun rises and sets
+  latitude: !secret hass_latitude
+  longitude: !secret hass_longitude
+  # Impacts weather/sunrise data (altitude above sea level in meters)
+  elevation: 0
+  # metric for Metric, imperial for Imperial
+  unit_system: metric
+  # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  time_zone: UTC
+  # Customization file
+  customize: !include customize.yaml
+
+# Enables the frontend
+frontend:
+
+# Enables configuration UI
+config:
+
+http:
+  # Secrets are defined in the file secrets.yaml
+  api_password: !secret http_password
+  # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
+  base_url: !secret http_password
+
+# Checks for available updates
+# Note: This component will send some information about your system to
+# the developers to assist with development of Home Assistant.
+# For more information, please see:
+# https://home-assistant.io/blog/2016/10/25/explaining-the-updater/
+updater:
+  # Optional, allows Home Assistant developers to focus on popular components.
+  # include_used_components: true
+
+# Discover some devices automatically
+discovery:
+
+# Allows you to issue voice commands from the frontend in enabled browsers
+conversation:
+
+# Enables support for tracking state changes over time
+history:
+
+# View all events in a logbook
+logbook:
+
+# Enables a map showing the location of tracked devices
+map:
+
+# Track the sun
+sun:
+
+# Weather prediction
+sensor:
+  - platform: yr
+
+# Text to speech
+tts:
+  - platform: google
+
+# Cloud
+cloud:
+
+# MQTT
+mqtt:
+
+# Test light
+light:
+  - platform: mqtt
+    name: "Andrea"
+    command_topic: "/house/light/command"
+    state_topic: "/house/light/status"
+    payload_on: "ON"
+    payload_off: "OFF"
+
+google_assistant:
+  project_id: home-4c8f5
+  client_id: !secret google_assistant_client_id
+  access_token: !secret google_assistant_access_token
+  api_key: !secret google_assistant_api_key
+  exposed_domains:
+    - switch
+    - light
+    - group
+    - scene
+
+remote:
+  - platform: xiaomi_miio
+    name: andrea_remote
+    host: 192.168.1.134
+    token: !secret xiaomi_mioo_token
+    slot: 1
+    timeout: 30
+    hidden: false
+    commands:
+      tv_vol_low:
+        command:
+          - raw:Z6VHADsCAAB7BgAAuggAAHoRAAA7IwAAeJsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA0AAAQAAAAAAAQEAAQEBAQEAAQAAAAAAAAEAAQEBAQEBBQJAA
+
+telegram_bot:
+  - platform: polling
+    api_key: !secret telegram_tostombot_api_key
+    allowed_chat_ids:
+      - !secret telegram_andrea_chat_id
+      - !secret telegram_laura_chat_id
+      - !secret telegram_tostom_group_chat_id
+
+notify:
+  - name: telegram_tostom
+    platform: telegram
+    chat_id: !secret telegram_tostom_group_chat_id
+
+group: !include groups.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml
+

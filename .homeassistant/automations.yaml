@@ -1,0 +1,37 @@
+- id: '1533930732910'
+  alias: Telegram start
+  trigger:
+  - event_data:
+      command: /luci
+    event_type: telegram_command
+    platform: event
+  condition: []
+  action:
+  - data:
+      data:
+        keyboard:
+        - /accendiAndrea, /spegniAndrea
+      message: commands
+    service: notify.telegram_tostom
+- id: '1533931219774'
+  alias: Telegram accendi andrea
+  trigger:
+  - event_data:
+      command: /accendiAndrea
+    event_type: telegram_command
+    platform: event
+  condition: []
+  action:
+  - service: light.turn_on
+    entity_id: light.andrea
+- id: '1533935649774'
+  alias: Telegram spegni andrea
+  trigger:
+  - event_data:
+      command: /spegniAndrea
+    event_type: telegram_command
+    platform: event
+  condition: []
+  action:
+  - service: light.turn_off
+    entity_id: light.andrea
