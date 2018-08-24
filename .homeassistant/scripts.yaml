@@ -1,0 +1,25 @@
+tv_turn_on_off:
+  alias: Accendi Spegni TV
+  sequence:
+  - service: remote.send_command
+    data:
+      entity_id: remote.xiaomi_miio_192_168_1_134
+      command: tv_on_off
+film_mode:
+  alias: Film
+  sequence:
+  - data:
+      command: tv_on_off
+      entity_id: remote.xiaomi_miio_192_168_1_134
+    service: remote.send_command
+  - data:
+      entity_id: light.andrea
+    service: light.turn_off
+  - data:
+      brightness: 100
+      entity_id: light.yeelight
+      transition: 4
+      xy_color:
+      - 0.186
+      - 0.34
+    service: light.turn_on

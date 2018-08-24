@@ -35,3 +35,14 @@
   action:
   - service: light.turn_off
     entity_id: light.andrea
+    
+- action:
+    service: notify.telegram_tostom
+    data_template:
+      message: 'La luce {{ trigger.entity_id }} è {{ trigger.to_state.state }}  '
+  alias: Send_message_on_statechange
+  condition: []
+  id: '1507996878399'
+  trigger:
+  - entity_id: light.andrea
+    platform: state

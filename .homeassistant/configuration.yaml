@@ -36,6 +36,8 @@ updater:
 
 # Discover some devices automatically
 discovery:
+  ignore:
+    - yeelight
 
 # Allows you to issue voice commands from the frontend in enabled browsers
 conversation:
@@ -66,7 +68,6 @@ cloud:
 # MQTT
 mqtt:
 
-# Test light
 light:
   - platform: mqtt
     name: "Andrea"
@@ -74,6 +75,12 @@ light:
     state_topic: "/house/light/status"
     payload_on: "ON"
     payload_off: "OFF"
+  - platform: yeelight
+    devices:
+      192.168.1.177:
+        transition: 1000
+        use_music_mode: False 
+        save_on_change: False
 
 google_assistant:
   project_id: home-4c8f5
@@ -84,7 +91,14 @@ google_assistant:
     - switch
     - light
     - group
-    - scene
+    - scripts
+  entity_config:
+    script.tv_turn_on_off:
+      name: "Accendi spegni TV"
+      expose: true
+    script.film_mode:
+      name: "Modalità film"
+      expose: true
 
 remote:
   - platform: xiaomi_miio
@@ -92,13 +106,15 @@ remote:
     host: 192.168.1.134
     token: !secret xiaomi_mioo_token
     slot: 1
-    timeout: 30
+    timeout: 5
     hidden: false
     commands:
       tv_vol_low:
         command:
           - raw:Z6VHADsCAAB7BgAAuggAAHoRAAA7IwAAeJsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA0AAAQAAAAAAAQEAAQEBAQEAAQAAAAAAAAEAAQEBAQEBBQJAA
-
+      tv_on_off:
+        command:
+          - raw:Z6VHACUCAABHAgAAeAYAALgIAABgEQAASSMAAHibAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABFAQEhAQEBAQEhIQEhISEhIQEBASEBAQEBISEhASEhISFhNQE=
 telegram_bot:
   - platform: polling
     api_key: !secret telegram_tostombot_api_key
@@ -117,7 +133,20 @@ media_player:
     client_id: !secret spotify_client_id
     client_secret: !secret spotify_client_secret
 
+switch:
+  - platform: template
+    switches:
+      google_assistant_sync:
+        value_template: "{{'off'}}"
+        turn_on:
+          service: google_assistant.request_sync
+        turn_off:
+          service: google_assistant.request_sync
+
 group: !include groups.yaml
 automation: !include automations.yaml
 script: !include scripts.yaml
+
+
+
 
