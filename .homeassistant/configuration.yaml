@@ -67,6 +67,7 @@ cloud:
 
 # MQTT
 mqtt:
+  password: !secret mqtt_password
 
 light:
   - platform: mqtt
