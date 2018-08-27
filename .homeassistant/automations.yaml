@@ -35,7 +35,6 @@
   action:
   - service: light.turn_off
     entity_id: light.andrea
-    
 - action:
     service: notify.telegram_tostom
     data_template:
@@ -46,3 +45,21 @@
   trigger:
   - entity_id: light.andrea
     platform: state
+- id: '1535144179463'
+  alias: Barilla
+  trigger:
+  - event_data: {}
+    event_type: dash_button_barilla
+    platform: event
+  condition: []
+  action:
+  - service: script.film_mode
+- id: '1535147006654'
+  alias: Duracell
+  trigger:
+  - event_data: {}
+    event_type: dash_button_duracell
+    platform: event
+  condition: []
+  action:
+  - service: script.music_mode
