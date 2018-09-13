@@ -52,4 +52,9 @@ ligth_mode:
   - data:
       entity_id: light.yeelight
     service: light.turn_off
-
+toggle_andrea_comodino:
+  alias: Toggle Andrea Comodino
+  sequence:
+  - data:
+      entity_id: light.yeelight
+    service: light.toggle

@@ -62,4 +62,4 @@
     platform: event
   condition: []
   action:
-  - service: script.music_mode
+  - service: script.toggle_andrea_comodino

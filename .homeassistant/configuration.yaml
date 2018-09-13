@@ -76,6 +76,10 @@ sensor:
         unit_of_measurement: "%"
         value_template: '{{ states.device_tracker.andrea_smartphone.attributes.battery|int }}'
         device_class: battery
+  - platform: netgear_lte
+    sensors:
+      - sms
+      - usage
 
 # Text to speech
 tts:
@@ -97,7 +101,7 @@ light:
     payload_off: "OFF"
   - platform: yeelight
     devices:
-      192.168.1.177:
+      192.168.2.150:
         transition: 1000
         use_music_mode: False 
         save_on_change: False
@@ -153,6 +157,16 @@ notify:
   - name: telegram_tostom
     platform: telegram
     chat_id: !secret telegram_andrea_chat_id
+  - platform: nfandroidtv
+    name: tv_salotto
+    host: 192.168.2.105
+  - platform: netgear_lte
+    name: sms_andrea
+    target: !secret telephone_number_andrea
+    
+netgear_lte:
+  - host: 192.168.5.1
+    password: !secret netgear_lte_modem_password
    
 media_player:
   - platform: spotify
