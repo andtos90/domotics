@@ -133,7 +133,7 @@ google_assistant:
 remote:
   - platform: xiaomi_miio
     name: andrea_remote
-    host: 192.168.1.134
+    host: 192.168.2.170
     token: !secret xiaomi_mioo_token
     slot: 1
     timeout: 5
@@ -163,6 +163,9 @@ notify:
   - platform: netgear_lte
     name: sms_andrea
     target: !secret telephone_number_andrea
+  - platform: netgear_lte
+    name: sms_laura
+    target: !secret telephone_number_laura
     
 netgear_lte:
   - host: 192.168.5.1
