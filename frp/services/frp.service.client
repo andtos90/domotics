@@ -1,0 +1,16 @@
+[Unit]
+Description=FRP-Client
+After=network-online.target
+
+[Service]
+Type=simple
+Restart=always
+ExecStart=/usr/bin/frpc -c /usr/share/frp/frpc.ini
+TimeoutSec=30
+Restart=on-failure
+RestartSec=30
+StartLimitInterval=350
+StartLimitBurst=10
+
+[Install]
+WantedBy=multi-user.target

@@ -10,10 +10,47 @@ PubSubClient client(net);
 byte mac[] = {0x38, 0xE6, 0xAD, 0x5D, 0x5D, 0x49};
 
 
-// TODO: support multiples lights and buttons
-int buttonPinNumber = CONTROLLINO_R0;
-int lightPinNumber = CONTROLLINO_A0;
-int lightStatus = LOW;
+struct Light {
+  int buttonPinNumber;
+  int lightPinNumber;
+  int status;
+  char name[12];
+};
+
+const short numberOfLights = 3;
+Light lights[numberOfLights]= {
+  {CONTROLLINO_R0, CONTROLLINO_A0, LOW, "living"},
+  {CONTROLLINO_R1, CONTROLLINO_A1, LOW, "kitchen"},
+  {CONTROLLINO_R2, CONTROLLINO_A2, LOW, "driveway"}
+};
+
+struct Cover {
+  int openPinNumber;
+  int closePinNumber;
+  bool isOpening;
+  bool isClosing;
+  unsigned long movementStartTime;
+  unsigned long movementDuration; //ms
+  char name[12];
+};
+
+const short numberOfCovers = 2;
+Cover covers[numberOfCovers]= {
+  {CONTROLLINO_R7, CONTROLLINO_R6, false, false, 0, 30000, "first"},
+  {CONTROLLINO_R8, CONTROLLINO_R9, false, false, 0, 30000, "ground"}
+};
+
+struct BinarySensor {
+  int statusPinNumber;
+  int status;
+  char name[12];
+};
+
+const short numberOfBinarySensors = 1;
+BinarySensor binarySensors[numberOfBinarySensors]= {
+  {CONTROLLINO_A9, LOW, "gate"},
+};
+
 
 // Handle secret data with EEPROM
 struct MQTTCredentials {
@@ -25,14 +62,35 @@ struct MQTTCredentials {
 };
 MQTTCredentials credentials;
 
-// MQTT topics
-const char* lightCommandTopic = "/house/light/command";
-const char* lightStatusTopic = "/house/light/status";
+String getLightCommandTopic(Light* light) {
+  return "/house/light/" + String(light->name) + "/command";
+}
+
+String getLightStatusTopic(Light* light) {
+  return "/house/light/" + String(light->name) + "/status";
+}
+
+String getCoverCommandTopic(Cover* cover) {
+  return "/house/cover/" + String(cover->name) + "/set";
+}
+
+String getBinarySensorStatusTopic(BinarySensor* sensor) {
+  return "/house/binary/" + String(sensor->name) + "/status";
+}
 
 void setup() {
   // Setup pins and serial port
-  pinMode(buttonPinNumber, OUTPUT);
-  pinMode(lightPinNumber, INPUT);
+  for(short i=0; i<numberOfLights; i++) {
+    pinMode(lights[i].buttonPinNumber, OUTPUT);
+    pinMode(lights[i].lightPinNumber, INPUT);
+  }
+  for(short i=0; i<numberOfCovers; i++) {
+    pinMode(covers[i].openPinNumber, OUTPUT);
+    pinMode(covers[i].closePinNumber, OUTPUT);
+  }
+  for(short i=0; i<numberOfBinarySensors; i++) {
+    pinMode(binarySensors[i].statusPinNumber, INPUT);
+  }
   Serial.begin(9600);
 
   // Read MQTT configuration from EEPROM
@@ -51,6 +109,31 @@ void setup() {
   client.setCallback(handleMqttMessage);
 }
 
+void checkLightStatus(Light* light) {
+  int currentStatus = digitalRead(light->lightPinNumber);
+  if(currentStatus != light->status) {
+    light->status = currentStatus;
+    publishLightStatus(light);
+  }
+}
+
+void checkCoverStatus(Cover* cover) {
+  if(cover->isOpening || cover->isClosing) {
+    unsigned long now = millis();        
+    unsigned long elapsed = now - cover->movementStartTime;  
+    if (elapsed >= cover->movementDuration){
+      stopCoverMovement(cover);
+    }
+  }
+}
+
+void checkBinarySensorStatus(BinarySensor* sensor) {
+  int currentStatus = digitalRead(sensor->statusPinNumber);
+  if(currentStatus != sensor->status) {
+    sensor->status = currentStatus;
+    publishBinarySensorStatus(sensor);
+  }
+}
 
 void loop() {
   
@@ -60,14 +143,18 @@ void loop() {
   // Code below is exectued only when we're connected to the MQTT server
   client.loop();
 
-  // Check light status
-  int currentStatus = digitalRead(lightPinNumber);
-  if(currentStatus != lightStatus) {
-    lightStatus = currentStatus;
-    publishLightStatus();
-    // avoid noisy signal from the light relay 
-    delay(300);
+  // Check status
+  for(short i=0; i<numberOfLights; i++) {
+    checkLightStatus(&lights[i]);
   }
+  for(short i=0; i<numberOfCovers; i++) {
+    checkCoverStatus(&covers[i]);
+  }
+  for(short i=0; i<numberOfBinarySensors; i++) {
+    checkBinarySensorStatus(&binarySensors[i]);
+  }
+  // avoid noisy signal from the light relay 
+  delay(100);
 }
 
 void reconnect() {
@@ -78,10 +165,27 @@ void reconnect() {
     if (client.connect(credentials.clientId, credentials.user, credentials.password)) {
       Serial.println("INFO: connected");
       // Once connected, publish an announcement...
-      publishLightStatus();
+      for(short i=0; i<numberOfLights; i++) {
+        publishLightStatus(&lights[i]);
+      }
+      for(short i=0; i<numberOfBinarySensors; i++) {
+        publishBinarySensorStatus(&binarySensors[i]);
+      }
       // ... and resubscribe
-      client.subscribe(lightCommandTopic);
-      client.subscribe(lightStatusTopic);
+      for(short i=0; i<numberOfLights; i++) {
+        char charTopic[30];
+        String topic = getLightCommandTopic(&lights[i]);
+        // TODO: avoid cast
+        topic.toCharArray(charTopic, 30);
+        client.subscribe(charTopic);
+      }
+      for(short i=0; i<numberOfCovers; i++) {
+        char charTopic[30];
+        String topic = getCoverCommandTopic(&covers[i]);
+        // TODO: avoid cast
+        topic.toCharArray(charTopic, 30);
+        client.subscribe(charTopic);
+      }
     } else {
       Serial.print("ERROR: failed, rc=");
       Serial.print(client.state());
@@ -93,13 +197,31 @@ void reconnect() {
 }
 
 
-void publishLightStatus() {
-  if(lightStatus == HIGH) {
+void publishLightStatus(Light* light) {
+  char charTopic[30];
+  String topic = getLightStatusTopic(light);
+  // TODO: avoid cast
+  topic.toCharArray(charTopic, 30);
+  if(light->status == HIGH) {
     Serial.println("Light is on");
-    client.publish(lightStatusTopic, "ON", true);
+    client.publish(charTopic, "ON", true);
   } else {
     Serial.println("Light is off");
-    client.publish(lightStatusTopic, "OFF", false);
+    client.publish(charTopic, "OFF", false);
+  }
+}
+
+void publishBinarySensorStatus(BinarySensor* sensor) {
+  char charTopic[30];
+  String topic = getBinarySensorStatusTopic(sensor);
+  // TODO: avoid cast
+  topic.toCharArray(charTopic, 30);
+  if(sensor->status == HIGH) {
+    Serial.println("Sensor is on");
+    client.publish(charTopic, "ON", true);
+  } else {
+    Serial.println("Sensor is off");
+    client.publish(charTopic, "OFF", false);
   }
 }
 
@@ -109,26 +231,74 @@ void handleMqttMessage(char* topic, byte* p_payload, unsigned int p_length) {
   for (uint8_t i = 0; i < p_length; i++) {
     payload.concat((char)p_payload[i]);
   }
-  if(String(lightCommandTopic).equals(topic)) {
-    handleMessage(payload);
+  bool found = false;
+  // lights
+  for(short i=0; i<numberOfLights && !found; i++) {
+    String lightTopic = getLightCommandTopic(&lights[i]);
+    if(String(lightTopic).equals(topic)) {
+      handleLightMessage(&lights[i], payload);
+      found = true;
+    }
+  }
+  // covers
+  for(short i=0; i<numberOfCovers && !found; i++) {
+    String coverTopic = getCoverCommandTopic(&covers[i]);
+    if(String(coverTopic).equals(topic)) {
+      handleCoverMessage(&covers[i], payload);
+      found = true;
+    }
   }
 }
 
 void handleSerial() {
  while (Serial.available() > 0) {
    char incomingCharacter = Serial.read();
-   handleMessage(String(incomingCharacter));
-   
+   handleLightMessage(&lights[0], String(incomingCharacter));
  }
 }
 
-void handleMessage(String msg) {
+void handleLightMessage(Light* light, String msg) {
   if(msg == "toggleLight") {
-    sendImpulse(buttonPinNumber);
+    sendImpulse(light->buttonPinNumber);
   } else if (msg == "ON") {
-    if(lightStatus == LOW) sendImpulse(buttonPinNumber);
+    if(light->status == LOW) sendImpulse(light->buttonPinNumber);
   } else if (msg == "OFF") {
-    if(lightStatus == HIGH) sendImpulse(buttonPinNumber);
+    if(light->status == HIGH) sendImpulse(light->buttonPinNumber);
+  }
+}
+
+void stopCoverMovement(Cover* cover) {
+  Serial.println("STOP cover");
+  digitalWrite(cover->openPinNumber, LOW);
+  digitalWrite(cover->closePinNumber, LOW);
+  cover->isOpening = false;
+  cover->isClosing = false;
+}
+
+void handleCoverMessage(Cover* cover, String msg) {
+  
+  delay(1000);
+  if(msg == "STOP") {
+    Serial.println("STOP");
+    stopCoverMovement(cover);
+  } else if (msg == "OPEN") {
+    if(!cover->isOpening) {
+      Serial.println("OPEN");
+      stopCoverMovement(cover);
+      delay(1000);
+      cover->movementStartTime = millis();
+      cover->isOpening = true;
+      digitalWrite(cover->openPinNumber, HIGH);
+    }
+  } else if (msg == "CLOSE") {
+    if(!cover->isClosing) {
+      Serial.println("CLOSE");
+      stopCoverMovement(cover);
+      delay(1000);
+      cover->movementStartTime = millis();
+      cover->isClosing = true;
+      digitalWrite(cover->closePinNumber, HIGH);
+    }
   }
 }
 
