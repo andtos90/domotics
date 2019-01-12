@@ -1,3 +1,29 @@
+- id: alarm_triggered
+  alias: '[Alarm] Triggered'
+  trigger:
+  - entity_id: alarm_control_panel.house
+    platform: state
+    to: triggered
+  action:
+  - service: notify.telegram_tostom
+    data:
+      message: 'I sensori hanno rilevato un movimento: {{ states[states.alarm_control_panel.house.attributes.changed_by.split(".")[0]][
+        states.alarm_control_panel.house.attributes.changed_by.split(".")[1]].name
+        }}'
+  - data: {}
+    data_template:
+      message: Allarme
+    service: script.foto_telegram_continuative
+  - service: media_player.volume_set
+    data:
+      entity_id: media_player.gh_living
+      volume_level: 0.4
+  - delay: '3'
+  - entity_id: media_player.group_casa
+    data_template:
+      language: it
+      message: 'I sensori hanno rilevato un movimento su {{ states[states.alarm_control_panel.house.attributes.changed_by.split(".")[0]][states.alarm_control_panel.house.attributes.changed_by.split(".")[1]].name}}'
+    service: tts.google_say
 - id: '1533930732910'
   alias: Telegram start
   trigger:
@@ -35,16 +61,11 @@
   action:
   - service: light.turn_off
     entity_id: light.andrea
-- action:
-    service: notify.telegram_tostom
-    data_template:
-      message: 'La luce {{ trigger.entity_id }} è {{ trigger.to_state.state }}  '
+- id: '1507996878399'
   alias: Send_message_on_statechange
+  trigger: []
   condition: []
-  id: '1507996878399'
-  trigger:
-  - entity_id: light.andrea
-    platform: state
+  action: []
 - id: '1535144179463'
   alias: Barilla
   trigger:
@@ -53,7 +74,7 @@
     platform: event
   condition: []
   action:
-  - service: script.film_mode
+  - service: script.1540935195507
 - id: '1535147006654'
   alias: Duracell
   trigger:
@@ -62,4 +83,145 @@
     platform: event
   condition: []
   action:
-  - service: script.toggle_andrea_comodino
+  - service: script.close_covers
+- alias: Camera Center
+  trigger:
+    platform: state
+    entity_id: input_select.camera_control
+    to: Centro
+  action:
+    service: shell_command.camera_center
+  id: 6ac0b990d63540b9b049925ef1e41845
+- alias: Camera Sx
+  trigger:
+    platform: state
+    entity_id: input_select.camera_control
+    to: Sinistra
+  action:
+    service: shell_command.camera_sx
+  id: 1a22e550327d4d3f8c543c56846509eb
+- alias: Camera Dx
+  trigger:
+    platform: state
+    entity_id: input_select.camera_control
+    to: Destra
+  action:
+    service: shell_command.camera_dx
+  id: ce41889e1cd64e23952509a60c8ed056
+- alias: Camera Hide
+  trigger:
+    platform: state
+    entity_id: input_select.camera_control
+    to: Nascondi
+  action:
+    service: shell_command.camera_hide
+  id: 599228f656c54ed09af6943b03f497c8
+- id: '1540937413698'
+  alias: Illy
+  trigger:
+  - event_data: {}
+    event_type: dash_button_illy
+    platform: event
+  condition: []
+  action:
+  - data:
+      entity_id: switch.allarme_disattivato
+    service: switch.toggle
+- id: '1545736810275'
+  alias: Bentornato
+  trigger:
+  - entity_id: binary_sensor.portoncino
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: switch.allarme_disattivato
+    state: 'off'
+  - condition: state
+    entity_id: timer.alarm_grace_time
+    state: idle
+  action:
+  - data:
+      entity_id: media_player.gh_living
+      volume_level: 0.4
+    service: media_player.volume_set
+  - delay: '2'
+  - data:
+      entity_id: media_player.gh_living
+      language: it
+      message: Bentornato! Ricordati di spegnere l'allarme
+    service: tts.google_say
+  - data:
+      entity_id: light.soggiorno
+    service: light.turn_on
+- id: '1545736810567'
+  alias: Bentornato Tapparelle
+  trigger:
+  - entity_id: binary_sensor.portoncino
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: switch.allarme_disattivato
+    state: 'off'
+  - after: sunrise
+    before: sunset
+    before_offset: -00:45:00
+    condition: sun
+  - condition: state
+    entity_id: timer.alarm_grace_time
+    state: idle
+  action:
+  - delay: '5'
+  - data:
+      entity_id: media_player.gh_living
+      volume_level: 0.4
+    service: media_player.volume_set
+  - delay: '2'
+  - data:
+      entity_id: media_player.gh_living
+      language: it
+      message: Alzo le tapparelle
+    service: tts.google_say
+  - data:
+      entity_id: cover.ground_floor
+    service: cover.open_cover
+  - data:
+      entity_id: cover.first_floor
+    service: cover.open_cover
+  - delay: '10'
+  - data:
+      entity_id: light.soggiorno
+    service: light.turn_off
+- id: '1533935635674'
+  alias: Accendi luce vialetto all'apertura del cancello
+  trigger:
+  - entity_id: binary_sensor.cancello_grande
+    platform: state
+    to: 'on'
+  condition:
+    condition: state
+    entity_id: sun.sun
+    state: below_horizon
+  action:
+  - data:
+      entity_id:
+      - light.vialetto
+    service: homeassistant.turn_on
+  - data:
+      entity_id: timer.driveway_light
+    service: timer.start
+- id: '1533912649667'
+  alias: Spegni luce vialetto alla fine del timer
+  trigger:
+    platform: event
+    event_type: timer.finished
+    event_data:
+      entity_id: timer.driveway_light
+  action:
+    service: homeassistant.turn_off
+    data:
+      entity_id:
+      - light.vialetto

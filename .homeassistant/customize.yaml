@@ -1,2 +1,4 @@
 light.yeelight:
-  friendly_name: Andrea Comodino
+  friendly_name: Scrivania
+light.yeelight_2:
+  friendly_name: Soffitto

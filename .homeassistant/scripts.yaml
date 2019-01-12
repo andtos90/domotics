@@ -58,3 +58,143 @@ toggle_andrea_comodino:
   - data:
       entity_id: light.yeelight
     service: light.toggle
+camera_hide:
+  alias: Nascondi videocamera
+  sequence:
+    service: shell_command.camera_hide
+'1540935195507':
+  alias: Spegni TV in 30 minuti
+  sequence:
+  - data:
+      command:
+      - tv_menu
+      - tv_rigth
+      - tv_rigth
+      - tv_rigth
+      - tv_ok
+      - tv_down
+      - tv_down
+      - tv_down
+      - tv_ok
+      - tv_down
+      - tv_down
+      - tv_down
+      - tv_ok
+      - tv_exit
+      delay_secs: '1.5'
+      entity_id: remote.xiaomi_miio_192_168_1_134
+    service: remote.send_command
+'1540937881436':
+  alias: TV Volume Down
+  sequence:
+  - data:
+      command:
+      - tv_vol_down
+      entity_id: remote.xiaomi_miio_192_168_1_134
+    service: remote.send_command
+'1540938026278':
+  alias: TV Volume UP
+  sequence:
+  - data:
+      command:
+      - tv_vol_up
+      entity_id: remote.xiaomi_miio_192_168_1_134
+    service: remote.send_command
+alarm_arm:
+  sequence:
+  - service: script.turn_off
+    data:
+      entity_id: script.alarm_disarm
+  - data:
+      entity_id: timer.alarm_grace_time
+    service: timer.start
+  - service: media_player.volume_set
+    data:
+      entity_id: media_player.gh_living
+      volume_level: 0.3
+  - delay: '2'
+  - data:
+      entity_id: media_player.gh_living
+      language: it
+      message: Allarme attivato, la luce del salotto verrà spenta a breve
+    service: tts.google_say
+  - entity_id: alarm_control_panel.house
+    service: alarm_control_panel.alarm_arm_away
+  - data:
+      entity_id: switch.sonoff_piccolo
+    service: switch.turn_on
+  - delay: '5'
+  - data:
+      entity_id: light.soggiorno
+    service: light.turn_off
+  - data: {}
+    service: shell_command.camera_dx
+  alias: Attiva Allarme
+alarm_disarm:
+  sequence:
+  - service: script.turn_off
+    data:
+      entity_id: script.alarm_arm
+  - service: script.turn_off
+    data:
+      entity_id: script.foto_telegram_continuative    
+  - service: media_player.volume_set
+    data:
+      entity_id: media_player.gh_living
+      volume_level: 0.3
+  - delay: '2'
+  - data:
+      entity_id: media_player.gh_living
+      language: it
+      message: Allarme disattivato
+    service: tts.google_say
+  - data:
+      code: !secret alarm_pin
+    entity_id: alarm_control_panel.house
+    service: alarm_control_panel.alarm_disarm
+  - data: {}
+    service: shell_command.camera_hide
+  - delay: '20'
+  - data:
+      entity_id: switch.sonoff_piccolo
+    service: switch.turn_off
+  alias: Disattiva Allarme
+foto_telegram:
+  alias: Foto su telegram
+  sequence:
+  - data:
+      data:
+        photo:
+          auth: basic
+          password: 83h9mvgA
+          url: http://192.168.2.26/IMAGE.JPG
+          username: admin
+      message: ''
+    service: notify.telegram_tostom
+foto_telegram_continuative:
+  alias: Foto su telegram continuative
+  sequence:
+  - delay: '5'
+  - service: script.foto_telegram
+  - delay: '10'
+  - service: script.foto_telegram
+  - delay: '10'
+  - service: script.foto_telegram
+close_covers:
+  alias: Chiudi tapparelle
+  sequence:
+  - data:
+      entity_id: cover.ground_floor
+    service: cover.close_cover
+  - data:
+      entity_id: cover.first_floor
+    service: cover.close_cover
+open_covers:
+  alias: Apri tapparelle
+  sequence:
+  - data:
+      entity_id: cover.ground_floor
+    service: cover.open_cover
+  - data:
+      entity_id: cover.first_floor
+    service: cover.open_cover

@@ -1,10 +1,10 @@
-title: My Awesome Home
+title: Casa Tostom
 # Include external resources
-resources:
-  - url: /local/my-custom-card.js
-    type: js
-  - url: /local/my-webfont.css
-    type: css
+#resources:
+#  - url: /local/my-custom-card.js
+#    type: js
+#  - url: /local/my-webfont.css
+#    type: css
 
 # Optional background for all views. Check https://developer.mozilla.org/en-US/docs/Web/CSS/background for more examples.
 background: center / cover no-repeat url("/background.png") fixed
@@ -13,31 +13,105 @@ excluded_entities:
   - weblink.router
 views:
     # View tab title.
-  - title: Example
-    # Optional unique id for direct access /lovelace/${id}
-    id: example
-    # Optional background (overwrites the global background).
-    background: radial-gradient(crimson, skyblue)
-    # Each view can have a different theme applied. Theme should be defined in the frontend.
-    theme: dark-mode
+  - title: Salotto
+    # Unique id for direct access /lovelace/${id}. If you don't specify one, it is added automatically.
+    id: salotto_container
     # The cards to show on this view.
     cards:
-        # The filter card will filter entities for their state
-      - type: entity-filter
+      - type: picture-glance
+        title: Salotto
         entities:
-          - device_tracker.paulus
-          - device_tracker.anne_there
-        state_filter:
-          - 'home'
-        card:
-          type: glance
-          title: People that are home
-
-        # The picture entity card will represent an entity with a picture
-      - type: picture-entity
-        image: https://www.home-assistant.io/images/default-social.png
-        entity: light.andrea
-
+          - input_select.camera_control
+          - light.tradfri_bulb_e27_ws_opal_980lm
+          - light.yeelight
+        camera_image: camera.livingroom_camera
+        
+      - type: thermostat
+        entity: climate.zona_giorno
+        
+      - type: thermostat
+        entity: climate.zona_notte
+        
+      - type: thermostat
+        entity: climate.bagni
+        
+      - type: media-control
+        entity: media_player.spotify
+      
+      - type: vertical-stack
+        id: andrea_remote_container
+        cards: 
+          - type: glance
+            title: LG Andrea
+            show_state: false
+            id: andrea_remote
+            columns: 4
+            entities:
+              - entity: remote.xiaomi_miio_192_168_1_134
+                icon: mdi:volume-plus
+                name:
+                tap_action: call-service
+                service: remote.send_command
+                service_data:
+                  entity_id: remote.xiaomi_miio_192_168_1_134
+                  command: tv_vol_up
+              - entity: remote.xiaomi_miio_192_168_1_134
+                icon: mdi:power
+                name:
+                tap_action: call-service
+                service: remote.send_command
+                service_data:
+                  entity_id: remote.xiaomi_miio_192_168_1_134
+                  command: tv_on_off
+              - entity: remote.xiaomi_miio_192_168_1_134
+                icon: mdi:video-input-component
+                name:
+                tap_action: call-service
+                service: remote.send_command
+                service_data:
+                  entity_id: remote.xiaomi_miio_192_168_1_134
+                  command: tv_switch_input
+              - entity: remote.xiaomi_miio_192_168_1_134
+                icon: mdi:arrow-up
+                name:
+                tap_action: call-service
+                service: remote.send_command
+                service_data:
+                  entity_id: remote.xiaomi_miio_192_168_1_134
+                  command: tv_ch_up    
+              - entity: remote.xiaomi_miio_192_168_1_134
+                icon: mdi:volume-minus
+                name:
+                tap_action: call-service
+                service: remote.send_command
+                service_data:
+                  entity_id: remote.xiaomi_miio_192_168_1_134
+                  command: tv_vol_down
+              - entity: remote.xiaomi_miio_192_168_1_134
+                icon: mdi:menu
+                name:
+                tap_action: call-service
+                service: remote.send_command
+                service_data:
+                  entity_id: remote.xiaomi_miio_192_168_1_134
+                  command: tv_menu
+              - entity: remote.xiaomi_miio_192_168_1_134
+                icon: mdi:check
+                name:
+                tap_action: call-service
+                service: remote.send_command
+                service_data:
+                  entity_id: remote.xiaomi_miio_192_168_1_134
+                  command: tv_ok
+              - entity: remote.xiaomi_miio_192_168_1_134
+                icon: mdi:arrow-down
+                name:
+                tap_action: call-service
+                service: remote.send_command
+                service_data:
+                  entity_id: remote.xiaomi_miio_192_168_1_134
+                  command: tv_ch_down
+                  
     # Specify a tab icon if you want the view tab to be an icon.
   - icon: mdi:home-assistant
     # Title of the view. Will be used as the tooltip for tab icon
@@ -50,7 +124,7 @@ views:
         # The entities here will be shown in the same order as specified.
         # Each entry is an entity ID or a map with extra options.
         entities:
-          - light.andrea
+          - light.kitchen
           - switch.ac
           - entity: light.living_room
             # Override the name to use

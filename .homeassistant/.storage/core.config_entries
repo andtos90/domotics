@@ -2,11 +2,62 @@
     "data": {
         "entries": [
             {
+                "connection_class": "unknown",
                 "data": {},
                 "domain": "cast",
                 "entry_id": "3777fcc4013640f2b954bfbe28156f3f",
                 "source": "discovery",
                 "title": "Google Cast",
+                "version": 1
+            },
+            {
+                "connection_class": "local_push",
+                "data": {},
+                "domain": "mqtt",
+                "entry_id": "c67794b272ad4345b3a9dcc3b6033e7a",
+                "source": "import",
+                "title": "configuration.yaml",
+                "version": 1
+            },
+            {
+                "connection_class": "unknown",
+                "data": {
+                    "gateway_id": "7e22295204400025",
+                    "host": "192.168.2.71",
+                    "identity": "ce65510c5623494e9ab87e45a56c29ec",
+                    "import_groups": false,
+                    "key": "M1emQC8I2NJrRJ1c"
+                },
+                "domain": "tradfri",
+                "entry_id": "60fb1acba6be41c980f1bddd1f269e73",
+                "source": "import",
+                "title": "192.168.2.71",
+                "version": 1
+            },
+            {
+                "connection_class": "local_poll",
+                "data": {
+                    "port_mapping": true,
+                    "sensors": true,
+                    "ssdp_description": "http://192.168.2.1:52940/rootDesc.xml",
+                    "udn": "uuid:48a4371c-e0cd-4cf2-81ce-9c69e2aedf16"
+                },
+                "domain": "upnp",
+                "entry_id": "7013d20d43314d048160563c30316976",
+                "source": "discovery",
+                "title": "DSL-N55U",
+                "version": 1
+            },
+            {
+                "connection_class": "unknown",
+                "data": {
+                    "secret": "409f82bd2bf63a70a9cf38128483738b",
+                    "webhook_id": "571d6fedb5f5336cf0c20bb7afff16436e0012038d0ae007532facf5f828d036"
+                },
+                "domain": "owntracks",
+                "entry_id": "3065639fe9cf477594bf0609ae1554a0",
+                "source": "user",
+                "title": "OwnTracks",
                 "version": 1
             }
         ]

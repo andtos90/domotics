@@ -1,0 +1,47 @@
+Tapparelle:
+    view: true
+    name: Tapparelle
+    entities:
+      - cover.all
+      - cover.ground_floor
+      - cover.first_floor
+
+Musica:
+    view: true
+    name: Musica
+    entities:
+      - media_player.gh_living
+      - media_player.gh_kitchen
+      - media_player.gh_main_bedroom
+      - media_player.group_zona_giorno
+      - media_player.group_casa
+      
+      
+Luci:
+    view: true
+    name: Luci
+    entities:
+      - light.soggiorno
+      - light.scrivania
+      - light.cucina
+      - light.vialetto
+      - light.comodino_andrea
+      - light.comodino_laura
+      - light.studio
+      
+Luci interne:
+    view: false
+    name: Luci interne
+    entities:
+      - light.soggiorno
+      - light.scrivania
+      - light.cucina
+      - light.comodino_andrea
+      - light.comodino_laura
+      - light.studio
+      
+Luci esterne:
+    view: false
+    name: Luci esterne
+    entities:
+      - light.vialetto

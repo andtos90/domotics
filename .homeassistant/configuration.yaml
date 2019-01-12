@@ -14,7 +14,8 @@ homeassistant:
   customize: !include customize.yaml
   auth_providers:
    - type: homeassistant
-   - type: legacy_api_password
+#   - type: legacy_api_password
+   
 
 # Enables the frontend
 frontend:
@@ -37,6 +38,9 @@ updater:
   # Optional, allows Home Assistant developers to focus on popular components.
   # include_used_components: true
 
+recorder:
+  db_url: !secret recorder_db_url
+
 # Discover some devices automatically
 discovery:
   ignore:
@@ -55,13 +59,12 @@ logbook:
 map:
 
 # Device tracking
-device_tracker:
-  - platform: owntracks_http
-    max_gps_accuracy: 200
-    waypoints: True
-    waypoint_whitelist:
-      - andrea
-      - laura
+owntracks:
+  max_gps_accuracy: 200
+  waypoints: True
+  waypoint_whitelist:
+    - casa
+    - lavoro_andrea
 
 # Track the sun
 sun:
@@ -76,11 +79,18 @@ sensor:
         unit_of_measurement: "%"
         value_template: '{{ states.device_tracker.andrea_smartphone.attributes.battery|int }}'
         device_class: battery
-  - platform: netgear_lte
-    sensors:
-      - sms
-      - usage
+#  - platform: netgear_lte
+#    sensors:
+#      - sms
+#      - usage
 
+binary_sensor:
+  - platform: mqtt
+    name: "Cancello grande"
+    state_topic: "/house/binary/gate/status"
+    payload_on: "ON"
+    payload_off: "OFF"
+    
 # Text to speech
 tts:
   - platform: google
@@ -91,60 +101,102 @@ cloud:
 # MQTT
 mqtt:
   password: !secret mqtt_password
+  
+#tradfri:
+#  host: 192.168.2.71
+
+cover:
+  - platform: mqtt
+    unique_id: ground_floor
+    name: "Piano terra"
+    command_topic: "/house/cover/ground/set"
+  - platform: mqtt
+    unique_id: first_floor
+    name: "Primo piano"
+    command_topic: "/house/cover/first/set"
+  - platform: group
+    unique_id: all
+    name: "Tutte le tapparelle"
+    entities:
+      - cover.ground_floor
+      - cover.first_floor
+
 
 light:
   - platform: mqtt
-    name: "Andrea"
-    command_topic: "/house/light/command"
-    state_topic: "/house/light/status"
+    name: "Soggiorno"
+    command_topic: "/house/light/living/command"
+    state_topic: "/house/light/living/status"
+    payload_on: "ON"
+    payload_off: "OFF"
+  - platform: mqtt
+    name: "Cucina"
+    command_topic: "/house/light/kitchen/command"
+    state_topic: "/house/light/kitchen/status"
+    payload_on: "ON"
+    payload_off: "OFF"
+  - platform: mqtt
+    name: "Vialetto"
+    command_topic: "/house/light/driveway/command"
+    state_topic: "/house/light/driveway/status"
     payload_on: "ON"
     payload_off: "OFF"
   - platform: yeelight
     devices:
-      192.168.2.150:
+      192.168.2.133:
+        name: Scrivania
+        model: color1
         transition: 1000
         use_music_mode: False 
         save_on_change: False
+      192.168.2.180:
+        name: Studio
+        model: ceiling3
+        transition: 1000
+        use_music_mode: False 
+        save_on_change: False
+      192.168.2.90:
+        name: Comodino Andrea
+        model: bslamp1
+        transition: 1000
+        use_music_mode: False 
+        save_on_change: False
+      192.168.2.63:
+        name: Comodino Laura
+        model: bslamp1
+        transition: 1000
+        use_music_mode: False 
+        save_on_change: False
+        
+timer:
+  driveway_light:
+    duration: '00:10:00'
+  alarm_grace_time:
+    duration: '00:10:00'
 
 google_assistant:
   project_id: home-4c8f5
-  client_id: !secret google_assistant_client_id
-  access_token: !secret google_assistant_access_token
   api_key: !secret google_assistant_api_key
   exposed_domains:
-    - switch
     - light
     - group
     - scripts
+    - cover
   entity_config:
-    script.tv_turn_on_off:
-      name: "Accendi spegni TV"
+    script.alarm_arm:
+      name: "Attiva Allarme"
       expose: true
-    script.film_mode:
-      name: "Modalità film"
+    script.alarm_disarm:
+      name: "Disattiva Allarme"
       expose: true
-    script.music_mode:
-      name: "Modalità musica"
-      expose: true  
-    script.ligth_mode:
-      name: "Modalità luce"
+    script.close_covers:
+      name: "Chiudi tapparelle"
+      expose: true
+    script.open_covers:
+      name: "Apri tapparelle"
       expose: true
       
-remote:
-  - platform: xiaomi_miio
-    name: andrea_remote
-    host: 192.168.2.170
-    token: !secret xiaomi_mioo_token
-    slot: 1
-    timeout: 5
-    hidden: false
-    commands:
-      tv_vol_low:
-        command:
-          - raw:Z6VHADsCAAB7BgAAuggAAHoRAAA7IwAAeJsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA0AAAQAAAAAAAQEAAQEBAQEAAQAAAAAAAAEAAQEBAQEBBQJAA
-      tv_on_off:
-        command:
-          - raw:Z6VHACUCAABHAgAAeAYAALgIAABgEQAASSMAAHibAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABFAQEhAQEBAQEhIQEhISEhIQEBASEBAQEBISEhASEhISFhNQE=
+    
 telegram_bot:
   - platform: polling
     api_key: !secret telegram_tostombot_api_key
@@ -156,27 +208,40 @@ telegram_bot:
 notify:
   - name: telegram_tostom
     platform: telegram
-    chat_id: !secret telegram_andrea_chat_id
+    chat_id: !secret telegram_tostom_group_chat_id
   - platform: nfandroidtv
     name: tv_salotto
     host: 192.168.2.105
-  - platform: netgear_lte
-    name: sms_andrea
-    target: !secret telephone_number_andrea
-  - platform: netgear_lte
-    name: sms_laura
-    target: !secret telephone_number_laura
-    
-netgear_lte:
-  - host: 192.168.5.1
-    password: !secret netgear_lte_modem_password
-   
-media_player:
-  - platform: spotify
-    client_id: !secret spotify_client_id
-    client_secret: !secret spotify_client_secret
+#  - platform: netgear_lte
+#    name: sms_andrea
+#    target: !secret telephone_number_andrea
+#  - platform: netgear_lte
+#    name: sms_laura
+#    target: !secret telephone_number_laura
 
 switch:
+  - platform: mqtt
+    name: "Sonoff Grande"
+    state_topic: "stat/sonoffs20/POWER"
+    command_topic: "cmnd/sonoffs20/POWER"
+    availability_topic: "tele/sonoffs20/LWT"
+    qos: 1
+    payload_on: "ON"
+    payload_off: "OFF"
+    payload_available: "Online"
+    payload_not_available: "Offline"
+    retain: false
+  - platform: mqtt
+    name: "Sonoff Piccolo"
+    state_topic: "stat/sonoffs26/POWER"
+    command_topic: "cmnd/sonoffs26/POWER"
+    availability_topic: "tele/sonoffs26/LWT"
+    qos: 1
+    payload_on: "ON"
+    payload_off: "OFF"
+    payload_available: "Online"
+    payload_not_available: "Offline"
+    retain: false  
   - platform: template
     switches:
       google_assistant_sync:
@@ -185,17 +250,102 @@ switch:
           service: google_assistant.request_sync
         turn_off:
           service: google_assistant.request_sync
+  - platform: template
+    switches:
+      allarme_disattivato:
+        value_template: "{{ is_state('alarm_control_panel.house', 'disarmed') }}"
+        turn_on:
+          service: script.alarm_disarm
+        turn_off:
+          service: script.alarm_arm 
           
 climate:
   - platform: netatmo
-    thermostat:
-      - termostato_3
   
 netatmo:
   api_key: !secret netatmo_api_key 
   secret_key: !secret netatmo_secret_key 
   username: !secret netatmo_username 
   password: !secret netatmo_password 
+  discovery: false
+  
+camera:
+  - platform: mjpeg
+    name: Livingroom Camera
+    authentication: basic
+    username: admin
+    password: 83h9mvgA
+    still_image_url: http://192.168.2.26/IMAGE.JPG
+    mjpeg_url: http://192.168.2.26/mjpeg.cgi?user=admin&password=83h9mvgA&channel=0
+    
+shell_command:
+  camera_center: 'curl -H "Authorization: Basic YWRtaW46ODNoOW12Z0E=" "http://192.168.2.26/pantiltcontrol.cgi?PanTiltPresetPositionMove=1"'
+  camera_sx: 'curl -H "Authorization: Basic YWRtaW46ODNoOW12Z0E=" "http://192.168.2.26/pantiltcontrol.cgi?PanTiltPresetPositionMove=2"'
+  camera_dx: 'curl -H "Authorization: Basic YWRtaW46ODNoOW12Z0E=" "http://192.168.2.26/pantiltcontrol.cgi?PanTiltPresetPositionMove=3"'
+  camera_hide: 'curl -H "Authorization: Basic YWRtaW46ODNoOW12Z0E=" "http://192.168.2.26/pantiltcontrol.cgi?PanTiltPresetPositionMove=4"'
+  
+input_select:
+  camera_control:
+    name: Controllo Videocamera
+    options:
+      - "Sinistra"
+      - "Centro"
+      - "Destra"
+      - "Nascondi"
+    icon: mdi:camera-switch
+
+konnected:
+  access_token: NM6dxbbsRhP7AgkHqtVx6uxysQgTA0KIHd2UTNemCdsLjyCZ2etfVUJEJYnoMmBNGRMNfLZp29C9Iacrqb3In5ajA9scw3BCIH
+  api_host: http://192.168.2.100:8123
+  devices:
+    - id: 68c63aab3b39
+      binary_sensors:
+        - zone: 1
+          type: door
+          name: 'Portoncino'
+        - zone: 2
+          type: window
+          name: 'Bagno terra'
+        - zone: 3
+          type: door
+          name: 'Garage Basculante'
+        - zone: 4
+          type: window
+          name: 'Cucina'
+        - zone: 5
+          type: motion
+          name: 'Garage'
+        - zone: 6
+          type: motion
+          name: 'Ingresso'
+    - id: b4e62d257a94
+      binary_sensors:
+        - zone: 1
+          type: motion
+          name: 'Scale'
+        - zone: 2
+          type: window
+          name: 'Salotto'
+    - id: dc4f2218fddc
+      binary_sensors:
+        - zone: 1
+          type: window
+          name: 'Camera'
+        - zone: 2
+          type: window
+          name: 'Bagno primo'
+        - zone: 3
+          type: window
+          name: 'Cameretta'
+        - zone: 4
+          type: window
+          name: 'Studio'
+        - zone: 5
+          type: window
+          name: 'Soffitta'
+
+alarm_control_panel: !include alarm.yaml
+panel_custom: !include panel_custom.yaml
 
 group: !include groups.yaml
 automation: !include automations.yaml

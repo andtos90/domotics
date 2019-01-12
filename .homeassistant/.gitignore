@@ -6,3 +6,6 @@ tts/
 .storage
 .cloud
 
+# alarm
+alarm_log.json
+alarm.yaml
