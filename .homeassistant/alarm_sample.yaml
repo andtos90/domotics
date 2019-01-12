@@ -1,0 +1,84 @@
+##########################################################
+## CUSTOM ALARM COMPONENT ALARM.YAML
+## https://github.com/gazoscalvertos/Hass-Custom-Alarm
+## VERSION:  1.0.2
+## MODIFIED: 18/04/18
+## CHANGE LOG:
+## Add Multi Codes, names, pics
+## optional code to arm alarm
+## Default Interface password: HG28!!&dn
+##########################################################
+
+platform: bwalarm
+name: House
+alarm: automation.alarm_triggered
+warning: automation.alarm_warning
+# change this
+code: 000000 
+panel:
+  enable_sensors_panel: true
+  cameras: []
+  camera_update_interval: ''
+  enable_floorplan_panel: false
+  enable_camera_panel: true
+  panel_title: ''
+states:
+  armed_home:
+    warning_time: 0
+    pending_time: '30'
+    immediate:
+    - binary_sensor.bagno
+    - binary_sensor.alzant
+    - binary_sensor.cucina
+    - binary_sensor.garage
+    - binary_sensor.ingresso
+    - binary_sensor.portoncino
+    - binary_sensor.scale
+    - binary_sensor.garage_basculante
+    - binary_sensor.bagno_primo
+    - binary_sensor.bagno_terra
+    - binary_sensor.camera
+    - binary_sensor.cameretta
+    - binary_sensor.salotto
+    - binary_sensor.soffitta
+    - binary_sensor.studio
+    trigger_time: '300'
+    override: []
+    delayed: []
+  armed_away:
+    warning_time: '0'
+    pending_time: '30'
+    immediate:
+    - binary_sensor.alzant
+    - binary_sensor.bagno
+    - binary_sensor.cucina
+    - binary_sensor.garage
+    - binary_sensor.garage_basculante
+    - binary_sensor.ingresso
+    - binary_sensor.portoncino
+    - binary_sensor.scale
+    - binary_sensor.salotto
+    - binary_sensor.soffitta
+    - binary_sensor.studio
+    - binary_sensor.cameretta
+    - binary_sensor.camera
+    - binary_sensor.bagno_terra
+    - binary_sensor.bagno_primo
+    trigger_time: '300'
+    override: []
+    delayed: []
+  armed_perimeter:
+    warning_time: 0
+    pending_time: 0
+    immediate: []
+    trigger_time: 600
+    override: []
+    delayed: []
+users:
+- code: qweqwewewqewqwewe
+  picture: /local/images/ha.png
+  id: ewqeqwewqewqewqewq
+  name: name
+  enabled: true
+# change this
+admin_password: yourpassword
