@@ -3,8 +3,8 @@ home-assistant.log
 home-assistant_v2.db
 .spotify-token-cache
 tts/
-.storage
-.cloud
+.storage/
+.cloud/
 
 # alarm
 alarm_log.json

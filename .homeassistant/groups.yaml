@@ -45,3 +45,4 @@ Luci esterne:
     name: Luci esterne
     entities:
       - light.vialetto
+      - light.giardino

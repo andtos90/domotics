@@ -102,24 +102,24 @@ camera_hide:
     service: remote.send_command
 alarm_arm:
   sequence:
-  - service: script.turn_off
-    data:
+  - data:
       entity_id: script.alarm_disarm
+    service: script.turn_off
   - data:
       entity_id: timer.alarm_grace_time
     service: timer.start
-  - service: media_player.volume_set
-    data:
-      entity_id: media_player.gh_living
-      volume_level: 0.3
-  - delay: '2'
   - data:
-      entity_id: media_player.gh_living
-      language: it
-      message: Allarme attivato, la luce del salotto verrà spenta a breve
-    service: tts.google_say
+      entity_id: timer.alarm_back_home_time
+    service: timer.finish
   - entity_id: alarm_control_panel.house
     service: alarm_control_panel.alarm_arm_away
+  - data:
+      entity_id: script.garden_blink
+    service: script.turn_on
+  - service: notify.telegram_tostom
+    data:
+      message: 'Allarme Inserito'
+  - service: script.close_covers
   - data:
       entity_id: switch.sonoff_piccolo
     service: switch.turn_on
@@ -127,31 +127,38 @@ alarm_arm:
   - data:
       entity_id: light.soggiorno
     service: light.turn_off
+  - delay: '100'
   - data: {}
     service: shell_command.camera_dx
   alias: Attiva Allarme
 alarm_disarm:
   sequence:
-  - service: script.turn_off
-    data:
+  - data:
+      entity_id: timer.alarm_back_home_time
+    service: timer.start
+  - data:
+      entity_id: timer.alarm_grace_time
+    service: timer.finish
+  - data:
       entity_id: script.alarm_arm
-  - service: script.turn_off
-    data:
-      entity_id: script.foto_telegram_continuative    
-  - service: media_player.volume_set
-    data:
-      entity_id: media_player.gh_living
-      volume_level: 0.3
-  - delay: '2'
+    service: script.turn_off
   - data:
-      entity_id: media_player.gh_living
-      language: it
-      message: Allarme disattivato
-    service: tts.google_say
+      entity_id: script.foto_telegram_continuative
+    service: script.turn_off
   - data:
-      code: !secret alarm_pin
+      code: 3343
     entity_id: alarm_control_panel.house
     service: alarm_control_panel.alarm_disarm
+  - data:
+      entity_id: script.garden_blink
+    service: script.turn_on
+  - service: notify.telegram_tostom
+    data:
+      message: 'Allarme Disinserito'
+  - delay: '4'
+  - data:
+      entity_id: script.garden_blink
+    service: script.turn_on
   - data: {}
     service: shell_command.camera_hide
   - delay: '20'
@@ -198,3 +205,28 @@ open_covers:
   - data:
       entity_id: cover.first_floor
     service: cover.open_cover
+morning_covers:
+  alias: Tapparelle al mattino
+  sequence:
+  - condition: template
+    value_template: "{{ not is_state('sensor.dark_sky_icon', 'rain') }}"
+  - data:
+      entity_id: cover.ground_floor
+    service: cover.open_cover
+  - data:
+      entity_id: cover.first_floor
+    service: cover.open_cover
+  - delay: '10'
+  - data:
+      entity_id: cover.first_floor
+    service: cover.stop_cover
+garden_blink:
+  alias: Garden blink
+  sequence:
+  - data:
+      entity_id: light.giardino
+    service: light.toggle
+  - delay: '2'
+  - data:
+      entity_id: light.giardino
+    service: light.toggle

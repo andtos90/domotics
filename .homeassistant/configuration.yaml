@@ -40,6 +40,9 @@ updater:
 
 recorder:
   db_url: !secret recorder_db_url
+  exclude:
+    entities:
+      - sensor.pulsantiera_ingresso
 
 # Discover some devices automatically
 discovery:
@@ -54,6 +57,8 @@ history:
 
 # View all events in a logbook
 logbook:
+
+system_health:
 
 # Enables a map showing the location of tracked devices
 map:
@@ -79,6 +84,20 @@ sensor:
         unit_of_measurement: "%"
         value_template: '{{ states.device_tracker.andrea_smartphone.attributes.battery|int }}'
         device_class: battery
+  - platform: mqtt
+    name: "Pulsantiera ingresso"
+    state_topic: "/house/keypad/frontdoor/statusjson"
+    value_template: "{{ value_json.code }}"
+    json_attributes:
+      - code
+  - platform: darksky
+    api_key: !secret darksky_api_key
+    forecast:
+      - 0
+    monitored_conditions:
+      - summary
+      - icon
+      - temperature
 #  - platform: netgear_lte
 #    sensors:
 #      - sms
@@ -100,6 +119,9 @@ cloud:
 
 # MQTT
 mqtt:
+  broker: 127.0.0.1
+  port: 1883
+  username: homeassistant
   password: !secret mqtt_password
   
 #tradfri:
@@ -107,16 +129,14 @@ mqtt:
 
 cover:
   - platform: mqtt
-    unique_id: ground_floor
-    name: "Piano terra"
+    name: ground_floor
     command_topic: "/house/cover/ground/set"
   - platform: mqtt
-    unique_id: first_floor
-    name: "Primo piano"
+    name: first_floor
     command_topic: "/house/cover/first/set"
   - platform: group
-    unique_id: all
-    name: "Tutte le tapparelle"
+    name: all
+    friendly_name: "Tutte le tapparelle"
     entities:
       - cover.ground_floor
       - cover.first_floor
@@ -141,38 +161,49 @@ light:
     state_topic: "/house/light/driveway/status"
     payload_on: "ON"
     payload_off: "OFF"
-  - platform: yeelight
-    devices:
-      192.168.2.133:
-        name: Scrivania
-        model: color1
-        transition: 1000
-        use_music_mode: False 
-        save_on_change: False
-      192.168.2.180:
-        name: Studio
-        model: ceiling3
-        transition: 1000
-        use_music_mode: False 
-        save_on_change: False
-      192.168.2.90:
-        name: Comodino Andrea
-        model: bslamp1
-        transition: 1000
-        use_music_mode: False 
-        save_on_change: False
-      192.168.2.63:
-        name: Comodino Laura
-        model: bslamp1
-        transition: 1000
-        use_music_mode: False 
-        save_on_change: False
+  - platform: mqtt
+    name: "Giardino"
+    command_topic: "/house/light/garden/command"
+    state_topic: "/house/light/garden/status"
+    payload_on: "ON"
+    payload_off: "OFF"
+    
+yeelight:
+  devices:
+    192.168.2.133:
+      name: Scrivania
+      model: color1
+      transition: 1000
+      use_music_mode: False 
+      save_on_change: False
+    192.168.2.180:
+      name: Studio
+      model: ceiling3
+      transition: 1000
+      use_music_mode: False 
+      save_on_change: False
+    192.168.2.90:
+      name: Comodino Andrea
+      model: bslamp1
+      transition: 1000
+      use_music_mode: False 
+      save_on_change: False
+    192.168.2.63:
+      name: Comodino Laura
+      model: bslamp1
+      transition: 1000
+      use_music_mode: False 
+      save_on_change: False
         
 timer:
   driveway_light:
     duration: '00:10:00'
+  garden_light:
+    duration: '00:03:00'
   alarm_grace_time:
     duration: '00:10:00'
+  alarm_back_home_time:
+    duration: '00:01:00'
 
 google_assistant:
   project_id: home-4c8f5
@@ -195,6 +226,11 @@ google_assistant:
     script.open_covers:
       name: "Apri tapparelle"
       expose: true
+    script.morning_covers:
+      name: "Tapparelle al mattino"
+      expose: true
+      
+fastdotcom:
       
     
 telegram_bot:
