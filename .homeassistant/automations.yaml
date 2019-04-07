@@ -22,7 +22,7 @@
   - entity_id: media_player.group_casa
     data_template:
       language: it
-      message: 'I sensori hanno rilevato un movimento su {{ states[states.alarm_control_panel.house.attributes.changed_by.split(".")[0]][states.alarm_control_panel.house.attributes.changed_by.split(".")[1]].name}}'
+      message: I sensori hanno rilevato un movimento su {{ states[states.alarm_control_panel.house.attributes.changed_by.split(".")[0]][states.alarm_control_panel.house.attributes.changed_by.split(".")[1]].name}}
     service: tts.google_say
 - id: '1533930732910'
   alias: Telegram start
@@ -136,25 +136,25 @@
     to: 'on'
   condition:
   - condition: state
-    entity_id: switch.allarme_disattivato
-    state: 'off'
-  - condition: state
     entity_id: timer.alarm_grace_time
     state: idle
+  - condition: state
+    entity_id: timer.alarm_back_home_time
+    state: active
   action:
   - data:
+      entity_id: light.soggiorno
+    service: light.turn_on
+  - data:
       entity_id: media_player.gh_living
-      volume_level: 0.4
+      volume_level: 0.3
     service: media_player.volume_set
   - delay: '2'
   - data:
       entity_id: media_player.gh_living
       language: it
-      message: Bentornato! Ricordati di spegnere l'allarme
+      message: Bentornato!
     service: tts.google_say
-  - data:
-      entity_id: light.soggiorno
-    service: light.turn_on
 - id: '1545736810567'
   alias: Bentornato Tapparelle
   trigger:
@@ -163,28 +163,17 @@
     platform: state
     to: 'on'
   condition:
-  - condition: state
-    entity_id: switch.allarme_disattivato
-    state: 'off'
   - after: sunrise
     before: sunset
-    before_offset: -00:45:00
+    before_offset: -00:10:00
     condition: sun
   - condition: state
     entity_id: timer.alarm_grace_time
     state: idle
+  - condition: state
+    entity_id: timer.alarm_back_home_time
+    state: active
   action:
-  - delay: '5'
-  - data:
-      entity_id: media_player.gh_living
-      volume_level: 0.4
-    service: media_player.volume_set
-  - delay: '2'
-  - data:
-      entity_id: media_player.gh_living
-      language: it
-      message: Alzo le tapparelle
-    service: tts.google_say
   - data:
       entity_id: cover.ground_floor
     service: cover.open_cover
@@ -195,8 +184,38 @@
   - data:
       entity_id: light.soggiorno
     service: light.turn_off
+- id: '1523957634674'
+  alias: Accendi luce giardino all'apertura del portoncino
+  trigger:
+  - entity_id: binary_sensor.portoncino
+    platform: state
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: sun.sun
+    state: below_horizon
+  action:
+  - data:
+      entity_id:
+      - light.giardino
+    service: homeassistant.turn_on
+  - data:
+      entity_id: timer.garden_light
+    service: timer.start
+- id: '1558916049147'
+  alias: Spegni luce giardino alla fine del timer
+  trigger:
+  - event_data:
+      entity_id: timer.garden_light
+    event_type: timer.finished
+    platform: event
+  action:
+  - data:
+      entity_id:
+      - light.giardino
+    service: homeassistant.turn_off
 - id: '1533935635674'
-  alias: Accendi luce vialetto all'apertura del cancello
+  alias: Accendi luci esterno all'apertura del cancello
   trigger:
   - entity_id: binary_sensor.cancello_grande
     platform: state
@@ -211,17 +230,92 @@
       - light.vialetto
     service: homeassistant.turn_on
   - data:
+      entity_id:
+      - light.giardino
+    service: homeassistant.turn_on
+  - data:
       entity_id: timer.driveway_light
     service: timer.start
 - id: '1533912649667'
-  alias: Spegni luce vialetto alla fine del timer
+  alias: Spegni luci esterne alla fine del timer
   trigger:
     platform: event
     event_type: timer.finished
     event_data:
       entity_id: timer.driveway_light
   action:
-    service: homeassistant.turn_off
+  - service: homeassistant.turn_off
     data:
       entity_id:
       - light.vialetto
+  - data:
+      entity_id:
+      - light.giardino
+    service: homeassistant.turn_off
+- id: '1548270083547'
+  alias: RFID Andrea
+  trigger:
+  - entity_id: sensor.pulsantiera_ingresso
+    platform: state
+    to: c5c30f
+  condition: []
+  action:
+  - data:
+      entity_id: switch.allarme_disattivato
+    service: switch.toggle
+  - alias: ''
+    data:
+      payload: '{ "code": "" }'
+      retain: 'true'
+      topic: /house/keypad/frontdoor/statusjson
+    service: mqtt.publish
+- id: '1548273483548'
+  alias: RFID Andrea
+  trigger:
+  - entity_id: sensor.pulsantiera_ingresso
+    platform: state
+    to: b1c7d8
+  condition: []
+  action:
+  - data:
+      entity_id: switch.allarme_disattivato
+    service: switch.toggle
+  - alias: ''
+    data:
+      payload: '{ "code": "" }'
+      retain: 'true'
+      topic: /house/keypad/frontdoor/statusjson
+    service: mqtt.publish
+- id: '1548620730929'
+  alias: Gestione automazioni in caso di pioggia
+  trigger:
+  - entity_id: sensor.dark_sky_icon
+    platform: state
+    to: rain
+  condition: []
+  action:
+  - data:
+      entity_id: automation.bentornato_tapparelle
+    service: automation.turn_off
+- id: '1548620788206'
+  alias: Gestione tapparelle quando non piove
+  trigger:
+  - entity_id: sensor.dark_sky_icon
+    from: rain
+    platform: state
+  condition: []
+  action:
+  - data:
+      entity_id: automation.bentornato_tapparelle
+    service: automation.turn_on
+- id: '1548620790215'
+  alias: Gestione tapparelle quando non piove
+  trigger:
+  - entity_id: sensor.dark_sky_icon
+    from: rain
+    platform: state
+  condition: []
+  action:
+  - data:
+      entity_id: automation.bentornato_tapparelle
+    service: automation.turn_on

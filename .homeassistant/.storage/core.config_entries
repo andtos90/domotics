@@ -49,14 +49,23 @@
                 "version": 1
             },
             {
+                "connection_class": "cloud_push",
+                "data": {},
+                "domain": "ios",
+                "entry_id": "b66bdf363d384b539f33a3a1fa643bec",
+                "source": "user",
+                "title": "Home Assistant iOS",
+                "version": 1
+            },
+            {
                 "connection_class": "unknown",
                 "data": {
-                    "secret": "409f82bd2bf63a70a9cf38128483738b",
-                    "webhook_id": "571d6fedb5f5336cf0c20bb7afff16436e0012038d0ae007532facf5f828d036"
+                    "secret": "f981cb64376a4168d22134203e043cbb",
+                    "webhook_id": "ff933e6fcaa4520fea27879782c3d4e900fef13355662b531924b67a96012d6e"
                 },
                 "domain": "owntracks",
-                "entry_id": "3065639fe9cf477594bf0609ae1554a0",
-                "source": "user",
+                "entry_id": "96c6993238d448079028fc3ff39b22de",
+                "source": "import",
                 "title": "OwnTracks",
                 "version": 1
             }
