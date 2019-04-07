@@ -1,3 +1,27 @@
+# Intro
+TODO [Home Assistant](https://www.home-assistant.io/) hosted on a local [Raspberry Pi B](https://www.raspberrypi.org/products/raspberry-pi-3-model-b/) with a 16GB SD Card
+
+# Additional Hardware and Software
+
+- External access over the Web via [frp](https://github.com/fatedier/frp), [Scaleaway](https://www.scaleway.com) and [Cloudflare](https://www.cloudflare.com/)
+- Voice commands with [Google Home](https://store.google.com/product/google_home)
+- Check online/offline status with [Healthchecks](https://healthchecks.io/)
+- House interface with [Controllino](https://www.controllino.biz/): Covers, Gate, Lights and Irrigation sprinklers(WIP)
+- Security alarm with [Konnected](https://konnected.io/) with on/off RFID integration via [Wiegand Protocol](https://en.wikipedia.org/wiki/Wiegand_interface)
+- Wifi LED lights [Yeelight](https://it.gearbest.com/yeelight-_gear/)
+- IP Camera []
+
+
+# TODO
+- Dasboard with [Magic Mirror](https://magicmirror.builders/)
+
+
+
+
+
+
+#WIP
+
 # Controllino
 - rename writeMqttCredentials.sample.ino to writeMqttCredentials.ino, edit with your credentials, upload and run the sketch once
 - upload and run the controllino MqttLight sketch
@@ -93,3 +117,6 @@ sudo systemctl enable frp
 
 # FTP Server
 https://www.digitalocean.com/community/tutorials/how-to-set-up-vsftpd-for-a-user-s-directory-on-ubuntu-18-04 (No SSL)
+
+#Image backup
+TODO utils/sdcard_backup.sh

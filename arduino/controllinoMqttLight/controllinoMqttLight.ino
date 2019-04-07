@@ -1,5 +1,10 @@
 #include <Controllino.h>
 #include <EEPROM.h>
+#include <ArduinoJson.h>
+
+#include "./Wiegand.h"
+
+WIEGAND wg;
 
 //MQTT
 #include <Ethernet.h>
@@ -17,11 +22,12 @@ struct Light {
   char name[12];
 };
 
-const short numberOfLights = 3;
+const short numberOfLights = 4;
 Light lights[numberOfLights]= {
   {CONTROLLINO_R0, CONTROLLINO_A0, LOW, "living"},
   {CONTROLLINO_R1, CONTROLLINO_A1, LOW, "kitchen"},
-  {CONTROLLINO_R2, CONTROLLINO_A2, LOW, "driveway"}
+  {CONTROLLINO_R2, CONTROLLINO_A2, LOW, "driveway"},
+  {CONTROLLINO_R3, CONTROLLINO_A3, LOW, "garden"}
 };
 
 struct Cover {
@@ -51,6 +57,18 @@ BinarySensor binarySensors[numberOfBinarySensors]= {
   {CONTROLLINO_A9, LOW, "gate"},
 };
 
+// Wiegand keypad
+struct AlarmKeypad {
+  int pinD0; // currently not used
+  int pinD1; // currently not used
+  char name[12];
+};
+
+const short numberOfAlarmKeypads = 1;
+AlarmKeypad alarmKeypads[numberOfAlarmKeypads]= {
+  {CONTROLLINO_D0, CONTROLLINO_D1, "frontdoor"},
+};
+
 
 // Handle secret data with EEPROM
 struct MQTTCredentials {
@@ -78,7 +96,13 @@ String getBinarySensorStatusTopic(BinarySensor* sensor) {
   return "/house/binary/" + String(sensor->name) + "/status";
 }
 
+String getAlarmKeypadStatusTopic(AlarmKeypad* sensor) {
+  return "/house/keypad/" + String(sensor->name) + "/statusjson";
+}
+
 void setup() {
+  Serial.begin(9600);
+  
   // Setup pins and serial port
   for(short i=0; i<numberOfLights; i++) {
     pinMode(lights[i].buttonPinNumber, OUTPUT);
@@ -91,7 +115,8 @@ void setup() {
   for(short i=0; i<numberOfBinarySensors; i++) {
     pinMode(binarySensors[i].statusPinNumber, INPUT);
   }
-  Serial.begin(9600);
+  // TODO: setup keypad pins?
+  wg.begin();
 
   // Read MQTT configuration from EEPROM
   EEPROM.get(0, credentials);
@@ -135,6 +160,17 @@ void checkBinarySensorStatus(BinarySensor* sensor) {
   }
 }
 
+void checkAlarmKeypadStatus(AlarmKeypad* sensor) {
+  if(wg.available()) {
+    String code = String(wg.getCode(), HEX);
+    Serial.println(wg.getCode(), HEX);
+    Serial.println(wg.getCode());
+    //char codeHexBuffer[8];
+    //sprintf(codeHexBuffer, "%4x", wg.getCode());
+    publishAlarmKeypadStatus(sensor, code);
+  } 
+}
+
 void loop() {
   
   if (!client.connected()) {
@@ -153,7 +189,13 @@ void loop() {
   for(short i=0; i<numberOfBinarySensors; i++) {
     checkBinarySensorStatus(&binarySensors[i]);
   }
-  // avoid noisy signal from the light relay 
+  for(short i=0; i<numberOfAlarmKeypads; i++) {
+    checkAlarmKeypadStatus(&alarmKeypads[i]);
+  }
+
+
+ 
+  // avoid noisy signal from the lights relay 
   delay(100);
 }
 
@@ -164,6 +206,7 @@ void reconnect() {
     // Attempt to connect
     if (client.connect(credentials.clientId, credentials.user, credentials.password)) {
       Serial.println("INFO: connected");
+      delay(10000);
       // Once connected, publish an announcement...
       for(short i=0; i<numberOfLights; i++) {
         publishLightStatus(&lights[i]);
@@ -204,7 +247,7 @@ void publishLightStatus(Light* light) {
   topic.toCharArray(charTopic, 30);
   if(light->status == HIGH) {
     Serial.println("Light is on");
-    client.publish(charTopic, "ON", true);
+    client.publish(charTopic, "ON", false);
   } else {
     Serial.println("Light is off");
     client.publish(charTopic, "OFF", false);
@@ -218,11 +261,28 @@ void publishBinarySensorStatus(BinarySensor* sensor) {
   topic.toCharArray(charTopic, 30);
   if(sensor->status == HIGH) {
     Serial.println("Sensor is on");
-    client.publish(charTopic, "ON", true);
+    client.publish(charTopic, "ON", false);
   } else {
     Serial.println("Sensor is off");
     client.publish(charTopic, "OFF", false);
   }
+}
+
+void publishAlarmKeypadStatus(AlarmKeypad* sensor, String& code) {
+  char charTopic[40];
+  String topic = getAlarmKeypadStatusTopic(sensor);
+  // TODO: avoid cast
+  topic.toCharArray(charTopic, 40);
+  
+  // payload
+  StaticJsonBuffer<100> jsonBuffer;
+  JsonObject& root = jsonBuffer.createObject();
+  root["code"] = code;
+  char payload[100];
+  root.printTo((char*)payload, root.measureLength() + 1);
+  root.printTo(Serial);
+  root.printTo(payload);
+  client.publish(charTopic, payload, false);
 }
 
 

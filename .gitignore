@@ -1,2 +1,8 @@
 # Publish only the sample to avoid credentials leak
 writeMqttCredentials.ino
+
+# Backups
+utils/sdcardBackups/
+
+# Editors
+.vscode
