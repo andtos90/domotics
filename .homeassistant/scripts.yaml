@@ -113,12 +113,12 @@ alarm_arm:
     service: timer.finish
   - entity_id: alarm_control_panel.house
     service: alarm_control_panel.alarm_arm_away
-  - data:
-      entity_id: script.garden_blink
-    service: script.turn_on
   - service: notify.telegram_tostom
     data:
       message: 'Allarme Inserito'
+  - data:
+      entity_id: script.garden_blink
+    service: script.turn_on
   - service: script.close_covers
   - data:
       entity_id: switch.sonoff_piccolo
@@ -149,12 +149,12 @@ alarm_disarm:
       code: 3343
     entity_id: alarm_control_panel.house
     service: alarm_control_panel.alarm_disarm
-  - data:
-      entity_id: script.garden_blink
-    service: script.turn_on
   - service: notify.telegram_tostom
     data:
       message: 'Allarme Disinserito'
+  - data:
+      entity_id: script.garden_blink
+    service: script.turn_on
   - delay: '4'
   - data:
       entity_id: script.garden_blink

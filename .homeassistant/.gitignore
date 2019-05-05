@@ -5,6 +5,7 @@ home-assistant_v2.db
 tts/
 .storage/
 .cloud/
+.ios.conf
 
 # alarm
 alarm_log.json

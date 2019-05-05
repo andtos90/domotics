@@ -112,7 +112,8 @@ binary_sensor:
     
 # Text to speech
 tts:
-  - platform: google
+  - platform: google_translate
+    service_name: google_say
 
 # Cloud
 cloud:
@@ -136,7 +137,6 @@ cover:
     command_topic: "/house/cover/first/set"
   - platform: group
     name: all
-    friendly_name: "Tutte le tapparelle"
     entities:
       - cover.ground_floor
       - cover.first_floor
@@ -212,7 +212,6 @@ google_assistant:
     - light
     - group
     - scripts
-    - cover
   entity_config:
     script.alarm_arm:
       name: "Attiva Allarme"
@@ -229,8 +228,16 @@ google_assistant:
     script.morning_covers:
       name: "Tapparelle al mattino"
       expose: true
+    cover.ground_floor:
+      name: "Tapperelle Piano Terra"
+      expose: true
+    cover.first_floor:
+      name: "Tapperelle Primo Piano"
+      expose: true
+    cover.all:
+      expose: false
       
-fastdotcom:
+#fastdotcom:
       
     
 telegram_bot:
@@ -379,6 +386,11 @@ konnected:
         - zone: 5
           type: window
           name: 'Soffitta'
+          
+remote:
+  - platform: xiaomi_miio
+    host: 192.168.2.170
+    token: !secret xiaomi_miio_token
 
 alarm_control_panel: !include alarm.yaml
 panel_custom: !include panel_custom.yaml
