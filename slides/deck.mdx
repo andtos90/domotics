@@ -1,7 +1,13 @@
 import { Image, Appear } from "mdx-deck";
-export { future as theme } from "@mdx-deck/themes";
+import future from '@mdx-deck/themes/future'
+import aspect from '@mdx-deck/themes/aspect'
 import highlight from "@mdx-deck/themes/syntax-highlighter";
 import { Split } from "mdx-deck/layouts";
+
+export const themes = [
+  future,
+  aspect,
+] 
 
 # Domotics 
 
@@ -19,27 +25,52 @@ import { Split } from "mdx-deck/layouts";
 
 ---
 
-![](./assets/mostazaLogo.png)
+<Image src={"./assets/mostazaLogo.png"} size='contain' style={{height: "70vh"}}/>
 
 ---
 
-![](./assets/larinLogo.png)
+<Image src={"./assets/larinGroup.jpg"}  style={{height: "60vh"}} size='contain'/>
+
+<Image src={"./assets/larinLogo.png"}  style={{height: "30vh"}} size='contain'/>
 
 ---
 
-![](./assets/larinGroup.jpg)
+<img src={"./assets/talent.jpg"} style={{height: "70vh"}}/>
+
+#### Teacher @TalentLab
 
 ---
 
-![](./assets/talent.jpg)
+<img src={"./assets/dojo.jpg"} style={{height: "70vh"}}/>
 
-Teacher @TalentLab
+#### Mentor @Coderdojo Padova
 
 ---
 
-![](./assets/dojo.jpg)
+<h2>Questions</h2>
+<Appear>
+ <p>Do you use some domotics device at home?</p>
+ <p>Are you going to upgrade your house to a smart home?</p>
+</Appear>
 
-Mentor @Coderdojo Padova
+---
+
+<Image src={"./assets/oldMan.png"} style={{height: "70vh", width:"90vw"}} size='contain'/>
+
+## Curious
+
+---
+
+<Image src={"./assets/remodelling.webp"} style={{height: "70vh", width:"90vw"}} size='contain'/>
+
+## Handyman
+
+---
+
+## Sorry, no meme for you
+<Appear>
+  <Image src={"./assets/pikaMeme2.jpg"} style={{height: "70vh", width:"90vw"}} size='contain'/>
+</Appear>
 
 ---
 <Appear>
@@ -59,79 +90,148 @@ Mentor @Coderdojo Padova
 
 ---
 
-<Appear>
- <h2>Questions</h2>
- <p>Do you use some domotic device at home?</p>
- <p>Are you going to upgrade your house to a smart home?</p>
- <p>Should new buildings be smart homes by default?</p>
- <p>Why not?</p>
-</Appear>
-
----
-
 ## Home Automation 
 
 ![](./assets/roombaFight.gif)
 
 ---
 
-## Is a smart home feasible for you?
+<Image src={"./assets/homeBefore.png"} style={{height: "70vh", width:"90vw"}} size='contain'/>
+
+October 2017
 
 ---
 
-## Is it something you may need?
+<Image src={"./assets/homeAfter.jpg"} style={{height: "70vh", width:"90vw"}} size='contain'/>
+
+October 2018
 
 ---
 
-## Can you still have your privacy? 
-
----
-
-<Split>
-
-# YES
-
+<h3>Is a smart home feasible for you?</h3>
 <Appear>
-  <p style={{ fontSize: "6em", marginLeft: 20}}>*</p>
+  <h3>Is it something you may need?</h3>
+  <h3>Can you still have your privacy? </h3>
 </Appear>
-
-</Split>
 
 ---
 
 ## Courage
 
----
-
-![](./assets/courage.jpg)
-
----
-
-## Curious
-
+<Appear>
+  <Image src={"./assets/courage.jpg"} style={{height: "70vh", width:"90vw"}} size='contain'/>
+</Appear>
 
 ---
 
-![](./assets/oldMan.png)
+## First Test
 
-## Curious
-
----
-
-## Handyman
+<video autoPlay muted style={{height: "70vh", width:"90vw"}}>
+  <source src="./assets/firstTest.mp4"  type="video/mp4"/>
+</video>
 
 ---
 
-![](./assets/remodelling.webp)
+## Goals
 
-## Handyman
+<Split>
+  <ul>
+    <li>Compatibility</li>
+      <ul>
+        <li>Current generation devices</li>
+        <li>Future devices</li>
+      </ul>
+    <li>Low cost</li>
+      <ul>
+        <li>Startup</li>
+        <li>Maintenance</li>
+      </ul>
+  </ul>
+  <ul>
+    <li>Easiness</li>
+      <ul>
+        <li>Interaction</li>
+        <li>Configuration</li>
+        <li>Maintenance</li>
+      </ul>
+    <li>Privacy</li>
+      <ul>
+        <li>Control over data</li>
+        <li>Resilient to attacks</li>
+      </ul>
+  </ul>
+</Split>
 
 ---
 
-# 404 MEME NOT FOUND
+<Image src={"./assets/arch.png"} style={{height: "80vh", width:"90vw"}} size='contain'/>
 
 ---
 
-![](./assets/pikaMeme.png)
+[//]: # "HOMEASSISTANT"
+
+<Image src={"./assets/haIntro.png"} style={{height: "90vh", width:"90vw"}} size='contain'/>
 
 ---
+
+<Image src={"./assets/haComponents.png"} style={{height: "90vh", width:"90vw"}} size='contain'/>
+
+---
+
+<Image src={"./assets/haArchitecture.png"} style={{height: "80vh", width:"90vw"}} size='contain'/>
+
+<p style={{fontSize: "0.5em"}}>Source: https://developers.home-assistant.io/docs/en/architecture_components.html</p>
+
+---
+
+## Highlights
+
+<ul>
+  <li>Full Open Source</li>
+  <li>Local instance </li>
+  <li>Declarative configuration files</li>
+  <li>Great community and good docs</li>
+</ul>
+
+---
+
+<iframe src={"https://demo.home-assistant.io/#/lovelace/0"} style={{height:"90vh", width:"90vw"}}/>
+
+---
+
+<Image src={"./assets/haGithub.png"} style={{height: "90vh", width:"90vw"}} size='contain'/>
+
+---
+
+<Image src={"./assets/haContributors.png"} style={{height: "80vh", width:"90vw"}} size='contain'/>
+
+<p style={{fontSize: "0.5em"}}>Source: https://octoverse.github.com/projects#repositories</p>
+
+---
+
+## Alternatives
+
+<ul>
+  <li><b>openHAB</b><br/>Java-based and aims at being a universal integration platform.</li>
+  <li><b>Domoticz</b><br/>A lightweight Home Automation System.</li>
+  <li><b>Gladys</b><br/>Open source program which runs on your Raspberry Pi.</li>
+  <li><b>SmartThings</b><br/>Commercial home automation hub by Samsung.</li>
+</ul>
+
+---
+
+[//]: # "AC HACK"
+
+<video autoPlay>
+  <source src="./assets/acMqtt.mp4" type="video/mp4"/>
+</video>
+
+---
+
+<video autoPlay>
+  <source src="./assets/acList.mp4" type="video/mp4"/>
+</video>
+
+---
+
+<Image src={"./assets/acCmd.png"} size='contain'/>
