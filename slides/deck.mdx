@@ -3,10 +3,16 @@ import future from '@mdx-deck/themes/future'
 import aspect from '@mdx-deck/themes/aspect'
 import highlight from "@mdx-deck/themes/syntax-highlighter";
 import { Split } from "mdx-deck/layouts";
+import {
+  CodeSurferLayout,
+  CodeSurferColumnLayout,
+  Code,
+  Step,
+} from "code-surfer"
+export { vsDark as theme } from "code-surfer/themes"
 
 export const themes = [
-  future,
-  aspect,
+  future
 ] 
 
 # Domotics 
@@ -67,32 +73,21 @@ export const themes = [
 
 ---
 
-## Sorry, no meme for you
-<Appear>
-  <Image src={"./assets/pikaMeme2.jpg"} style={{height: "70vh", width:"90vw"}} size='contain'/>
-</Appear>
+## Wiki 🇬🇧
+    
+Home automation or domotics is building automation for a home, called a smart home or smart house.
 
 ---
-<Appear>
-  <div style={{ paddingLeft: 30, paddingRight: 30}}>
-    <h2>Wiki 🇬🇧</h2>
-    <p> 
-      Home automation or domotics is building automation for a home, called a smart home or smart house.
-    </p>
-  </div>
-  <div style={{ paddingLeft: 30, paddingRight: 30}}>
-    <h2>Wiki 🇮🇹</h2>
-    <p>
-      La domotica, dall'unione del termine domus, e che in latino significa "casa", e del suffisso greco ticos, che indica le discipline di applicazione, è la scienza interdisciplinare che si occupa dello studio delle tecnologie adatte a migliorare la qualità della vita nella casa e più in generale negli ambienti antropizzati.
-    </p>
-  </div>
-</Appear>
+
+## Wiki 🇮🇹
+
+La domotica, dall'unione del termine domus, e che in latino significa "casa", e del suffisso greco ticos, che indica le discipline di applicazione, è la scienza interdisciplinare che si occupa dello studio delle tecnologie adatte a migliorare la qualità della vita nella casa e più in generale negli ambienti antropizzati.
 
 ---
 
 ## Home Automation 
 
-![](./assets/roombaFight.gif)
+<Image src={"./assets/roombaFight.gif"} style={{height: "60vh", width:"90vw"}} size='contain'/>
 
 ---
 
@@ -112,14 +107,6 @@ October 2018
 <Appear>
   <h3>Is it something you may need?</h3>
   <h3>Can you still have your privacy? </h3>
-</Appear>
-
----
-
-## Courage
-
-<Appear>
-  <Image src={"./assets/courage.jpg"} style={{height: "70vh", width:"90vw"}} size='contain'/>
 </Appear>
 
 ---
@@ -154,7 +141,7 @@ October 2018
         <li>Configuration</li>
         <li>Maintenance</li>
       </ul>
-    <li>Privacy</li>
+    <li>Security</li>
       <ul>
         <li>Control over data</li>
         <li>Resilient to attacks</li>
@@ -187,11 +174,322 @@ October 2018
 ## Highlights
 
 <ul>
-  <li>Full Open Source</li>
   <li>Local instance </li>
   <li>Declarative configuration files</li>
   <li>Great community and good docs</li>
+  <li>Full Open Source</li>
 </ul>
+
+---
+
+<Split>
+  <ul>
+    <li>Compatibility</li>
+      <ul>
+        <li>Current generation devices</li>
+        <li>Future devices</li>
+      </ul>
+    <li>Low cost</li>
+      <ul>
+        <li>Startup</li>
+        <li>Maintenance</li>
+      </ul>
+  </ul>
+  <ul>
+    <li>Easiness</li>
+      <ul>
+        <li>Interaction</li>
+        <li>Configuration</li>
+        <li>Maintenance</li>
+      </ul>
+    <li>Security</li>
+      <ul>
+        <li>Control over data</li>
+        <li>Resilient to attacks</li>
+      </ul>
+  </ul>
+</Split>
+
+---
+
+<CodeSurferLayout>
+
+```yml subtitle="Automation example"
+- id: '1545736810567'
+  alias: Bentornato Tapparelle
+  trigger:
+  - entity_id: binary_sensor.portoncino
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition:
+  - after: sunrise
+    before: sunset
+    before_offset: -00:10:00
+    condition: sun
+  action:
+  - data: entity_id: cover.ground_floor
+    service: cover.open_cover
+  - data: entity_id: cover.first_floor
+    service: cover.open_cover
+  - delay: '20'
+  - data: entity_id: light.soggiorno
+    service: light.turn_off
+```
+
+```yml 1[3:5],2[3:8],3,8,13
+- id: '1545736810567'
+  alias: Bentornato Tapparelle
+  trigger:
+  - entity_id: binary_sensor.portoncino
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition:
+  - after: sunrise
+    before: sunset
+    before_offset: -00:10:00
+    condition: sun
+  action:
+  - data: entity_id: cover.ground_floor
+    service: cover.open_cover
+  - data: entity_id: cover.first_floor
+    service: cover.open_cover
+  - delay: '20'
+  - data: entity_id: light.soggiorno
+    service: light.turn_off
+```
+
+```yml 1:2
+- id: '1545736810567'
+  alias: Bentornato Tapparelle
+  trigger:
+  - entity_id: binary_sensor.portoncino
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition:
+  - after: sunrise
+    before: sunset
+    before_offset: -00:10:00
+    condition: sun
+  action:
+  - data: entity_id: cover.ground_floor
+    service: cover.open_cover
+  - data: entity_id: cover.first_floor
+    service: cover.open_cover
+  - delay: '20'
+  - data: entity_id: light.soggiorno
+    service: light.turn_off
+```
+
+```yml 3:7
+- id: '1545736810567'
+  alias: Bentornato Tapparelle
+  trigger:
+  - entity_id: binary_sensor.portoncino
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition:
+  - after: sunrise
+    before: sunset
+    before_offset: -00:10:00
+    condition: sun
+  action:
+  - data: entity_id: cover.ground_floor
+    service: cover.open_cover
+  - data: entity_id: cover.first_floor
+    service: cover.open_cover
+  - delay: '20'
+  - data: entity_id: light.soggiorno
+    service: light.turn_off
+```
+
+```yml 8:12
+- id: '1545736810567'
+  alias: Bentornato Tapparelle
+  trigger:
+  - entity_id: binary_sensor.portoncino
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition:
+  - after: sunrise
+    before: sunset
+    before_offset: -00:10:00
+    condition: sun
+  action:
+  - data: entity_id: cover.ground_floor
+    service: cover.open_cover
+  - data: entity_id: cover.first_floor
+    service: cover.open_cover
+  - delay: '20'
+  - data: entity_id: light.soggiorno
+    service: light.turn_off
+```
+
+```yml 13:20
+- id: '1545736810567'
+  alias: Bentornato Tapparelle
+  trigger:
+  - entity_id: binary_sensor.portoncino
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition:
+  - after: sunrise
+    before: sunset
+    before_offset: -00:10:00
+    condition: sun
+  action:
+  - data: entity_id: cover.ground_floor
+    service: cover.open_cover
+  - data: entity_id: cover.first_floor
+    service: cover.open_cover
+  - delay: '20'
+  - data: entity_id: light.soggiorno
+    service: light.turn_off
+```
+
+</CodeSurferLayout>
+
+---
+
+<CodeSurferLayout>
+
+```yml subtitle="Script examples"
+foto_telegram:
+  alias: Foto su telegram
+  sequence:
+  - service: notify.telegram_tostom
+    data:
+      message: ''
+      data:
+        photo:
+          auth: basic
+          password: !secret camera_dlink_password
+          url: http://192.168.2.26/IMAGE.JPG
+          username: admin
+    
+
+foto_telegram_continuative:
+  alias: Foto su telegram continuative
+  sequence:
+  - delay: '5'
+  - service: script.foto_telegram
+  - delay: '10'
+  - service: script.foto_telegram
+  - delay: '10'
+  - service: script.foto_telegram
+```
+
+```yml 1:12
+foto_telegram:
+  alias: Foto su telegram
+  sequence:
+  - service: notify.telegram_tostom
+    data:
+      message: ''
+      data:
+        photo:
+          auth: basic
+          password: !secret camera_dlink_password
+          url: http://192.168.2.26/IMAGE.JPG
+          username: admin
+      
+foto_telegram_continuative:
+  alias: Foto su telegram continuative
+  sequence:
+  - delay: '5'
+  - service: script.foto_telegram
+  - delay: '10'
+  - service: script.foto_telegram
+  - delay: '10'
+  - service: script.foto_telegram
+```
+
+```yml 14:24
+foto_telegram:
+  alias: Foto su telegram
+  sequence:
+  - service: notify.telegram_tostom
+    data:
+      message: ''
+      data:
+        photo:
+          auth: basic
+          password: !secret camera_dlink_password
+          url: http://192.168.2.26/IMAGE.JPG
+          username: admin
+
+foto_telegram_continuative:
+  alias: Foto su telegram continuative
+  sequence:
+  - delay: '5'
+  - service: script.foto_telegram
+  - delay: '10'
+  - service: script.foto_telegram
+  - delay: '10'
+  - service: script.foto_telegram
+```
+
+</CodeSurferLayout>
+
+---
+
+<CodeSurferLayout>
+
+```yml subtitle="Configuration examples"
+telegram_bot:
+  - platform: polling
+    api_key: !secret telegram_tostombot_api_key
+    allowed_chat_ids:
+      - !secret telegram_andrea_chat_id
+      - !secret telegram_laura_chat_id
+      - !secret telegram_tostom_group_chat_id
+
+notify:
+  - name: telegram_tostom
+    platform: telegram
+    chat_id: !secret telegram_tostom_group_chat_id
+```
+
+```yml 1:7
+telegram_bot:
+  - platform: polling
+    api_key: !secret telegram_tostombot_api_key
+    allowed_chat_ids:
+      - !secret telegram_andrea_chat_id
+      - !secret telegram_laura_chat_id
+      - !secret telegram_tostom_group_chat_id
+
+notify:
+  - name: telegram_tostom
+    platform: telegram
+    chat_id: !secret telegram_tostom_group_chat_id
+```
+
+```yml 9:13
+telegram_bot:
+  - platform: polling
+    api_key: !secret telegram_tostombot_api_key
+    allowed_chat_ids:
+      - !secret telegram_andrea_chat_id
+      - !secret telegram_laura_chat_id
+      - !secret telegram_tostom_group_chat_id
+
+notify:
+  - name: telegram_tostom
+    platform: telegram
+    chat_id: !secret telegram_tostom_group_chat_id
+```
+
+</CodeSurferLayout>
+
+---
+
+<iframe src={"https://www.home-assistant.io/components/telegram/"} style={{height:"90vh", width:"90vw"}}/>
 
 ---
 
@@ -220,7 +518,67 @@ October 2018
 
 ---
 
+<Image src={"./assets/arch.png"} style={{height: "80vh", width:"90vw"}} size='contain'/>
+
+---
+
+<Image src={"./assets/archHa.png"} style={{height: "80vh", width:"90vw"}} size='contain'/>
+
+---
+
+## Controllable Devices
+
+<ul>
+  <li>Proprietary devices</li>
+  <li>Open devices</li>
+  <li>Custom devices</li>
+</ul>
+
+---
+
+## How to choose a device
+
+<ol>
+  <li>Prefer open device</li>
+  <li>Check for open protocols support (e.g. MQTT)</li>
+  <li>Look at brands with good support to the community</li>
+  <li>Take your time</li>
+</ol>
+
+---
+
+<Image src={"./assets/archHa.png"} style={{height: "80vh", width:"90vw"}} size='contain'/>
+
+---
+
+<Image src={"./assets/archDevices.png"} style={{height: "80vh", width:"90vw"}} size='contain'/>
+
+---
+
+## Control Device
+
+<ul>
+  <li>Web Interface</li>
+  <li>Voice</li>
+  <li>Custom interface (e.g. Home Panel)</li>
+</ul>
+
+<p>IMHO, automations are the best way to interact</p>
+
+---
+
+<Image src={"./assets/archDevices.png"} style={{height: "80vh", width:"90vw"}} size='contain'/>
+
+---
+
+<Image src={"./assets/archUi.png"} style={{height: "80vh", width:"90vw"}} size='contain'/>
+
+---
 [//]: # "AC HACK"
+
+# ONE MORE THING...
+
+---
 
 <video autoPlay>
   <source src="./assets/acMqtt.mp4" type="video/mp4"/>
@@ -234,4 +592,8 @@ October 2018
 
 ---
 
-<Image src={"./assets/acCmd.png"} size='contain'/>
+<Image src={"./assets/acCmd.png"} style={{height: "80vh", width:"90vw"}} size='contain'/>
+
+---
+
+# Thank you
