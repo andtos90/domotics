@@ -61,18 +61,6 @@ export const themes = [
 
 ---
 
-<Image src={"./assets/oldMan.png"} style={{height: "70vh", width:"90vw"}} size='contain'/>
-
-## Curious
-
----
-
-<Image src={"./assets/remodelling.webp"} style={{height: "70vh", width:"90vw"}} size='contain'/>
-
-## Handyman
-
----
-
 ## Wiki 🇬🇧
     
 Home automation or domotics is building automation for a home, called a smart home or smart house.
@@ -165,12 +153,6 @@ October 2018
 
 ---
 
-<Image src={"./assets/haArchitecture.png"} style={{height: "80vh", width:"90vw"}} size='contain'/>
-
-<p style={{fontSize: "0.5em"}}>Source: https://developers.home-assistant.io/docs/en/architecture_components.html</p>
-
----
-
 ## Highlights
 
 <ul>
@@ -182,33 +164,9 @@ October 2018
 
 ---
 
-<Split>
-  <ul>
-    <li>Compatibility</li>
-      <ul>
-        <li>Current generation devices</li>
-        <li>Future devices</li>
-      </ul>
-    <li>Low cost</li>
-      <ul>
-        <li>Startup</li>
-        <li>Maintenance</li>
-      </ul>
-  </ul>
-  <ul>
-    <li>Easiness</li>
-      <ul>
-        <li>Interaction</li>
-        <li>Configuration</li>
-        <li>Maintenance</li>
-      </ul>
-    <li>Security</li>
-      <ul>
-        <li>Control over data</li>
-        <li>Resilient to attacks</li>
-      </ul>
-  </ul>
-</Split>
+<Image src={"./assets/haArchitecture.png"} style={{height: "80vh", width:"90vw"}} size='contain'/>
+
+<p style={{fontSize: "0.5em"}}>Source: https://developers.home-assistant.io/docs/en/architecture_components.html</p>
 
 ---
 
@@ -228,12 +186,12 @@ October 2018
     before_offset: -00:10:00
     condition: sun
   action:
-  - data: entity_id: cover.ground_floor
+  - entity_id: cover.ground_floor
     service: cover.open_cover
-  - data: entity_id: cover.first_floor
+  - entity_id: cover.first_floor
     service: cover.open_cover
   - delay: '20'
-  - data: entity_id: light.soggiorno
+  - entity_id: light.soggiorno
     service: light.turn_off
 ```
 
@@ -251,12 +209,12 @@ October 2018
     before_offset: -00:10:00
     condition: sun
   action:
-  - data: entity_id: cover.ground_floor
+  - entity_id: cover.ground_floor
     service: cover.open_cover
-  - data: entity_id: cover.first_floor
+  - entity_id: cover.first_floor
     service: cover.open_cover
   - delay: '20'
-  - data: entity_id: light.soggiorno
+  - entity_id: light.soggiorno
     service: light.turn_off
 ```
 
@@ -274,12 +232,12 @@ October 2018
     before_offset: -00:10:00
     condition: sun
   action:
-  - data: entity_id: cover.ground_floor
+  - entity_id: cover.ground_floor
     service: cover.open_cover
-  - data: entity_id: cover.first_floor
+  - entity_id: cover.first_floor
     service: cover.open_cover
   - delay: '20'
-  - data: entity_id: light.soggiorno
+  - entity_id: light.soggiorno
     service: light.turn_off
 ```
 
@@ -297,12 +255,12 @@ October 2018
     before_offset: -00:10:00
     condition: sun
   action:
-  - data: entity_id: cover.ground_floor
+  - entity_id: cover.ground_floor
     service: cover.open_cover
-  - data: entity_id: cover.first_floor
+  - entity_id: cover.first_floor
     service: cover.open_cover
   - delay: '20'
-  - data: entity_id: light.soggiorno
+  - entity_id: light.soggiorno
     service: light.turn_off
 ```
 
@@ -320,12 +278,12 @@ October 2018
     before_offset: -00:10:00
     condition: sun
   action:
-  - data: entity_id: cover.ground_floor
+  - entity_id: cover.ground_floor
     service: cover.open_cover
-  - data: entity_id: cover.first_floor
+  - entity_id: cover.first_floor
     service: cover.open_cover
   - delay: '20'
-  - data: entity_id: light.soggiorno
+  - entity_id: light.soggiorno
     service: light.turn_off
 ```
 
@@ -343,12 +301,12 @@ October 2018
     before_offset: -00:10:00
     condition: sun
   action:
-  - data: entity_id: cover.ground_floor
+  - entity_id: cover.ground_floor
     service: cover.open_cover
-  - data: entity_id: cover.first_floor
+  - entity_id: cover.first_floor
     service: cover.open_cover
   - delay: '20'
-  - data: entity_id: light.soggiorno
+  - entity_id: light.soggiorno
     service: light.turn_off
 ```
 
@@ -507,6 +465,36 @@ notify:
 
 ---
 
+<Split>
+  <ul>
+    <li>Compatibility</li>
+      <ul>
+        <li>Current generation devices</li>
+        <li>Future devices</li>
+      </ul>
+    <li>Low cost</li>
+      <ul>
+        <li>Startup</li>
+        <li>Maintenance</li>
+      </ul>
+  </ul>
+  <ul>
+    <li>Easiness</li>
+      <ul>
+        <li>Interaction</li>
+        <li>Configuration</li>
+        <li>Maintenance</li>
+      </ul>
+    <li>Security</li>
+      <ul>
+        <li>Control over data</li>
+        <li>Resilient to attacks</li>
+      </ul>
+  </ul>
+</Split>
+
+---
+
 ## Alternatives
 
 <ul>
@@ -576,7 +564,7 @@ notify:
 ---
 [//]: # "AC HACK"
 
-# ONE MORE THING...
+## SPEAKING ABOUT PRIVACY...
 
 ---
 
