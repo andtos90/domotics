@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "scripts": {
     "start": "mdx-deck deck.mdx",
-    "build": "mdx-deck build deck.mdx",
+    "build": "mdx-deck build deck.mdx --basepath='/ha-slides'",
     "export": "mdx-deck-export pdf deck.mdx"
   },
   "devDependencies": {
     "@mdx-deck/export": "^2.3.2",
-    "code-surfer": "2.0.0-alpha.5",
+    "code-surfer": "2.0.0-alpha.6",
     "mdx-deck": "2.3.2",
     "mdx-deck-live-code": "^1.0.1",
     "raw-loader": "^3.0.0"
