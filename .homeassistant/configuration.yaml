@@ -114,6 +114,18 @@ binary_sensor:
 tts:
   - platform: google_translate
     service_name: google_say
+    
+media_player:
+  - platform: androidtv
+    name: TV del salotto
+    host: 192.168.2.105
+    adb_server_ip: 127.0.0.1
+    apps:
+      org.xbmc.kodi: "Kodi"
+      com.netflix.ninja: "Netflix"
+      com.spotify.tv.android: "Spotify"
+      com.google.android.tvlauncher: "Homescreen"
+      com.google.android.youtube.tv: "Youtube"
 
 # Cloud
 cloud:
@@ -227,6 +239,12 @@ google_assistant:
       expose: true
     script.morning_covers:
       name: "Tapparelle al mattino"
+      expose: true
+    script.cinema_mode_on:
+      name: "Avvia cinema"
+      expose: true
+    script.cinema_mode_of:
+      name: "Stop cinema"
       expose: true
     cover.ground_floor:
       name: "Tapperelle Piano Terra"
@@ -398,6 +416,9 @@ panel_custom: !include panel_custom.yaml
 group: !include groups.yaml
 automation: !include automations.yaml
 script: !include scripts.yaml
+
+ssdp:
+zeroconf:
 
 
 
