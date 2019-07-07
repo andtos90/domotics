@@ -6,6 +6,7 @@
                 "data": {},
                 "domain": "cast",
                 "entry_id": "3777fcc4013640f2b954bfbe28156f3f",
+                "options": {},
                 "source": "discovery",
                 "title": "Google Cast",
                 "version": 1
@@ -15,37 +16,9 @@
                 "data": {},
                 "domain": "mqtt",
                 "entry_id": "c67794b272ad4345b3a9dcc3b6033e7a",
+                "options": {},
                 "source": "import",
                 "title": "configuration.yaml",
-                "version": 1
-            },
-            {
-                "connection_class": "unknown",
-                "data": {
-                    "gateway_id": "7e22295204400025",
-                    "host": "192.168.2.71",
-                    "identity": "ce65510c5623494e9ab87e45a56c29ec",
-                    "import_groups": false,
-                    "key": "M1emQC8I2NJrRJ1c"
-                },
-                "domain": "tradfri",
-                "entry_id": "60fb1acba6be41c980f1bddd1f269e73",
-                "source": "import",
-                "title": "192.168.2.71",
-                "version": 1
-            },
-            {
-                "connection_class": "local_poll",
-                "data": {
-                    "port_mapping": true,
-                    "sensors": true,
-                    "ssdp_description": "http://192.168.2.1:52940/rootDesc.xml",
-                    "udn": "uuid:48a4371c-e0cd-4cf2-81ce-9c69e2aedf16"
-                },
-                "domain": "upnp",
-                "entry_id": "7013d20d43314d048160563c30316976",
-                "source": "discovery",
-                "title": "DSL-N55U",
                 "version": 1
             },
             {
@@ -53,20 +26,9 @@
                 "data": {},
                 "domain": "ios",
                 "entry_id": "b66bdf363d384b539f33a3a1fa643bec",
+                "options": {},
                 "source": "user",
                 "title": "Home Assistant iOS",
-                "version": 1
-            },
-            {
-                "connection_class": "unknown",
-                "data": {
-                    "secret": "f981cb64376a4168d22134203e043cbb",
-                    "webhook_id": "ff933e6fcaa4520fea27879782c3d4e900fef13355662b531924b67a96012d6e"
-                },
-                "domain": "owntracks",
-                "entry_id": "96c6993238d448079028fc3ff39b22de",
-                "source": "import",
-                "title": "OwnTracks",
                 "version": 1
             }
         ]

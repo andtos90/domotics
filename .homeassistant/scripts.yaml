@@ -113,13 +113,12 @@ alarm_arm:
     service: timer.finish
   - entity_id: alarm_control_panel.house
     service: alarm_control_panel.alarm_arm_away
-  - service: notify.telegram_tostom
-    data:
-      message: 'Allarme Inserito'
+  - data:
+      message: Allarme Inserito
+    service: notify.telegram_tostom
   - data:
       entity_id: script.garden_blink
     service: script.turn_on
-  - service: script.close_covers
   - data:
       entity_id: switch.sonoff_piccolo
     service: switch.turn_on
@@ -151,7 +150,7 @@ alarm_disarm:
     service: alarm_control_panel.alarm_disarm
   - service: notify.telegram_tostom
     data:
-      message: 'Allarme Disinserito'
+      message: Allarme Disinserito
   - data:
       entity_id: script.garden_blink
     service: script.turn_on
@@ -209,7 +208,7 @@ morning_covers:
   alias: Tapparelle al mattino
   sequence:
   - condition: template
-    value_template: "{{ not is_state('sensor.dark_sky_icon', 'rain') }}"
+    value_template: '{{ not is_state(''sensor.dark_sky_icon'', ''rain'') }}'
   - data:
       entity_id: cover.ground_floor
     service: cover.open_cover
@@ -230,3 +229,44 @@ garden_blink:
   - data:
       entity_id: light.giardino
     service: light.toggle
+start_netflix:
+  sequence:
+  - service: media_player.turn_on
+    data:
+      entity_id: media_player.tv_del_salotto_5
+  - service: androidtv.adb_command
+    data:
+      entity_id: media_player.tv_del_salotto_5
+      command: am start -a android.intent.action.VIEW -d -n com.netflix.ninja/.MainActivity
+stop_tv:
+  sequence:
+  - service: media_player.turn_off
+    data:
+      entity_id: media_player.tv_del_salotto_5
+cinema_mode_on:
+  sequence:
+  - data:
+      entity_id: script.start_netflix
+    service: script.turn_on
+  - data:
+      entity_id: light.soggiorno
+    service: light.turn_off
+  - data:
+      brightness: 255
+      entity_id: light.scrivania
+      transition: 4
+      xy_color:
+      - 0.599
+      - 0.382
+    service: light.turn_on
+cinema_mode_off:
+  sequence:
+  - data:
+      entity_id: script.stop_tv
+    service: script.turn_on
+  - data:
+      entity_id: light.soggiorno
+    service: light.turn_on
+  - data:
+      entity_id: light.scrivania
+    service: light.turn_off

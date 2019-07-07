@@ -180,7 +180,7 @@
   - data:
       entity_id: cover.first_floor
     service: cover.open_cover
-  - delay: '10'
+  - delay: '25'
   - data:
       entity_id: light.soggiorno
     service: light.turn_off
@@ -269,8 +269,13 @@
       retain: 'true'
       topic: /house/keypad/frontdoor/statusjson
     service: mqtt.publish
+  - service_template: >
+      {% if is_state("switch.allarme_disattivato", "off") %}
+        script.close_covers
+      {% else %}
+      {% endif %}
 - id: '1548273483548'
-  alias: RFID Andrea
+  alias: RFID Laura
   trigger:
   - entity_id: sensor.pulsantiera_ingresso
     platform: state
@@ -286,6 +291,11 @@
       retain: 'true'
       topic: /house/keypad/frontdoor/statusjson
     service: mqtt.publish
+  - service_template: >
+      {% if is_state("switch.allarme_disattivato", "off") %}
+        script.close_covers
+      {% else %}
+      {% endif %}
 - id: '1548620730929'
   alias: Gestione automazioni in caso di pioggia
   trigger:
@@ -319,3 +329,12 @@
   - data:
       entity_id: automation.bentornato_tapparelle
     service: automation.turn_on
+- id: '1528689731929'
+  alias: Chiusura tapparelle alla mattina
+  trigger:
+  - platform: time
+    at: '05:00:00'
+  condition: []
+  action:
+  - service: script.close_covers
+
