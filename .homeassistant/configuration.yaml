@@ -25,7 +25,7 @@ config:
 
 http:
   # Secrets are defined in the file secrets.yaml
-  api_password: !secret http_password
+  #api_password: !secret http_password
   # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
   base_url: !secret base_url
 
@@ -126,9 +126,6 @@ media_player:
       com.spotify.tv.android: "Spotify"
       com.google.android.tvlauncher: "Homescreen"
       com.google.android.youtube.tv: "Youtube"
-
-# Cloud
-cloud:
 
 # MQTT
 mqtt:

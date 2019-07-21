@@ -30,6 +30,20 @@
                 "source": "user",
                 "title": "Home Assistant iOS",
                 "version": 1
+            },
+            {
+                "connection_class": "unknown",
+                "data": {
+                    "cloudhook": false,
+                    "secret": "579818c81e4b041f0cc1e532504c0470",
+                    "webhook_id": "0707202c9422013ce2ff292a764f84fb0147ea35acc4a58e49f4091d2f4a541b"
+                },
+                "domain": "owntracks",
+                "entry_id": "37d4d35b332f440db4d1217337819abf",
+                "options": {},
+                "source": "import",
+                "title": "OwnTracks",
+                "version": 1
             }
         ]
     },
