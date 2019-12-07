@@ -3,11 +3,16 @@
         "entries": [
             {
                 "connection_class": "unknown",
-                "data": {},
+                "data": {
+                    "user_id": "fdb02ee0c90247909678bc4ac4593377"
+                },
                 "domain": "cast",
                 "entry_id": "3777fcc4013640f2b954bfbe28156f3f",
                 "options": {},
                 "source": "discovery",
+                "system_options": {
+                    "disable_new_entities": false
+                },
                 "title": "Google Cast",
                 "version": 1
             },
@@ -18,6 +23,9 @@
                 "entry_id": "c67794b272ad4345b3a9dcc3b6033e7a",
                 "options": {},
                 "source": "import",
+                "system_options": {
+                    "disable_new_entities": false
+                },
                 "title": "configuration.yaml",
                 "version": 1
             },
@@ -28,6 +36,9 @@
                 "entry_id": "b66bdf363d384b539f33a3a1fa643bec",
                 "options": {},
                 "source": "user",
+                "system_options": {
+                    "disable_new_entities": false
+                },
                 "title": "Home Assistant iOS",
                 "version": 1
             },
@@ -42,6 +53,9 @@
                 "entry_id": "37d4d35b332f440db4d1217337819abf",
                 "options": {},
                 "source": "import",
+                "system_options": {
+                    "disable_new_entities": false
+                },
                 "title": "OwnTracks",
                 "version": 1
             }
